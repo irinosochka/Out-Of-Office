@@ -3,7 +3,7 @@ export interface IEmployee {
     FullName: string;
     Subdivision: string;
     Position: string;
-    Status: string;
+    Status: 'Active' | 'Inactive';
     PeoplePartner: number;
     OutOfOfficeBalance: number;
     Photo?: string;

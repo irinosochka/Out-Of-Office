@@ -39,7 +39,7 @@ const dbCheck = async () => {
                             return reject(err);
                         }
 
-                        db.query(sqlScript, function (err, result) {
+                        db.query(sqlScript, function (err) {
                             if (err) return reject(err);
                             console.log("Database and tables created");
                             resolve();
@@ -74,16 +74,6 @@ const start = async () => {
             // Start the server only after successful DB connection
             app.listen(PORT, () => console.log("SERVER WORK"));
         });
-
-        // Query the database after confirming connection
-        // db.query('SELECT * FROM Employees', (err, results) => {
-        //         if (err) {
-        //             console.error("Error fetching records:", err);
-        //             return;
-        //         }
-        //         console.log("Employees in database:");
-        //         console.log(results);
-        // });
     } catch (e) {
         console.log(e);
     }
@@ -101,4 +91,32 @@ app.get('/Lists/Employees', (req, res) => {
     });
 });
 
+app.get('/Lists/Leave Requests', (req, res) => {
+    db.query('SELECT * FROM LeaveRequests', (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
 
+app.get('/Lists/Approval Requests', (req, res) => {
+    db.query('SELECT * FROM ApprovalRequests', (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+app.get('/Lists/Projects', (req, res) => {
+    db.query('SELECT * FROM Projects', (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
