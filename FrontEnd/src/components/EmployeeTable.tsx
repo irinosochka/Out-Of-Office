@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { IEmployee } from '../models/IEmployee';
+import Search from '../common/Search';
 
 interface EmployeeTableProps {
     employees: IEmployee[];
@@ -8,6 +9,7 @@ interface EmployeeTableProps {
 const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     const [sortBy, setSortBy] = useState<keyof IEmployee>('EmployeeID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
+    const [searchTerm, setSearchTerm] = useState<string>('');
 
     const handleSort = (column: keyof IEmployee) => {
         if (sortBy === column) {
@@ -20,7 +22,12 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         }
     };
 
-    const sortedEmployees = [...employees].sort((a, b) => {
+    // Function to filter employees based on search term
+    const filteredEmployees = searchTerm ? employees.filter(employee =>
+        employee.FullName.toLowerCase().includes(searchTerm.toLowerCase())
+    ) : employees;
+
+    const sortedEmployees = [...filteredEmployees].sort((a, b) => {
         const aValue = a[sortBy];
         const bValue = b[sortBy];
 
@@ -41,9 +48,12 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         }
     });
 
-
     return (
         <div>
+            <h2>Employee Table</h2>
+            <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by name..."
+            />
             <table>
                 <thead>
                 <tr>
