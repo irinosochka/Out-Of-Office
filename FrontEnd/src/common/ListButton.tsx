@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+// ListButton.tsx
+import React from 'react';
 
-const ListButton: React.FC = () => {
-    const [selectedButton, setSelectedButton] = useState<string>('Employees');
+interface ListButtonProps {
+    selectedButton: string;
+    setSelectedButton: (button: string) => void;
+}
 
+const ListButton: React.FC<ListButtonProps> = ({ selectedButton, setSelectedButton }) => {
     return (
         <div>
             <button
@@ -29,13 +33,6 @@ const ListButton: React.FC = () => {
             >
                 Project
             </button>
-
-            <div>
-                {selectedButton === 'Employees' && <p>Employees content</p>}
-                {selectedButton === 'ApprovalRequests' && <p>Approval Requests content</p>}
-                {selectedButton === 'LeaveRequest' && <p>Leave Request content</p>}
-                {selectedButton === 'Project' && <p>Project content</p>}
-            </div>
         </div>
     );
 };

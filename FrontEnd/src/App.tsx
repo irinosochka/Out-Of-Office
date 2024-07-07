@@ -1,40 +1,21 @@
-import React, {useState} from 'react';
+// App.tsx
+import React, { useState } from 'react';
 import './App.css';
-import EmployeesPage from "./pages/EmployeesPage";
-import ApprovalRequestsPage from "./pages/ApprovalRequestsPage";
-import LeaveRequestsPage from "./pages/LeaveRequestsPage";
-import ProjectsPage from "./pages/ProjectsPage";
+import EmployeesPage from './pages/EmployeesPage';
+import ApprovalRequestsPage from './pages/ApprovalRequestsPage';
+import LeaveRequestsPage from './pages/LeaveRequestsPage';
+import ProjectsPage from './pages/ProjectsPage';
+import ListButton from "./common/ListButton";
 
 function App() {
     const [selectedButton, setSelectedButton] = useState<string>('Employees');
 
     return (
         <div>
-            <button
-                onClick={() => setSelectedButton('Employees')}
-                className={selectedButton === 'Employees' ? 'active' : ''}
-            >
-                Employees
-            </button>
-            <button
-                onClick={() => setSelectedButton('ApprovalRequests')}
-                className={selectedButton === 'ApprovalRequests' ? 'active' : ''}
-            >
-                Approval Requests
-            </button>
-            <button
-                onClick={() => setSelectedButton('LeaveRequest')}
-                className={selectedButton === 'LeaveRequest' ? 'active' : ''}
-            >
-                Leave Request
-            </button>
-            <button
-                onClick={() => setSelectedButton('Project')}
-                className={selectedButton === 'Project' ? 'active' : ''}
-            >
-                Project
-            </button>
-
+            <ListButton
+                selectedButton={selectedButton}
+                setSelectedButton={setSelectedButton}
+            />
             <div>
                 {selectedButton === 'Employees' && <EmployeesPage />}
                 {selectedButton === 'ApprovalRequests' && <ApprovalRequestsPage />}
