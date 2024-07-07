@@ -1,4 +1,3 @@
-// App.tsx
 import React, { useState } from 'react';
 import './App.css';
 import EmployeesPage from './pages/EmployeesPage';
