@@ -15,7 +15,7 @@ CREATE TABLE Employees (
 );
 
 CREATE TABLE LeaveRequests (
-    LeaveRequestID INT AUTO_INCREMENT PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     EmployeeID INT NOT NULL,
     AbsenceReason VARCHAR(255) NOT NULL,
     StartDate DATE NOT NULL,

@@ -6,7 +6,7 @@ interface EmployeeTableProps {
     employees: IEmployee[];
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
+const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     const [sortBy, setSortBy] = useState<keyof IEmployee>('EmployeeID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -50,7 +50,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees }) => {
 
     return (
         <div>
-            <h2>Employee Table</h2>
             <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by name..."
             />
@@ -100,4 +99,4 @@ const SortableHeader: React.FC<SortableHeaderProps> = ({ column, title, handleSo
     );
 };
 
-export default EmployeeTable;
+export default EmployeesTable;

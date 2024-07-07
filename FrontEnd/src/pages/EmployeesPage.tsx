@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {IEmployee} from "./models/IEmployee";
-import EmployeeTable from "./components/EmployeeTable";
+import {IEmployee} from "../models/IEmployee";
+import EmployeesTable from "../components/EmployeesTable";
 
-const EmployeeList: React.FC = () => {
+const EmployeesPage: React.FC = () => {
     const [employees, setEmployees] = useState<IEmployee[]>([]);
 
     useEffect(() => {
@@ -23,9 +23,10 @@ const EmployeeList: React.FC = () => {
 
     return (
         <div>
-            <EmployeeTable employees={employees} />
+            <h2>Employee Table</h2>
+            <EmployeesTable employees={employees} />
         </div>
     );
 };
 
-export default EmployeeList;
+export default EmployeesPage;

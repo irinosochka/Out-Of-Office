@@ -1,11 +1,6 @@
-import React, {useState} from 'react';
-import './App.css';
-import EmployeesPage from "./pages/EmployeesPage";
-import ApprovalRequestsPage from "./pages/ApprovalRequestsPage";
-import LeaveRequestsPage from "./pages/LeaveRequestsPage";
-import ProjectsPage from "./pages/ProjectsPage";
+import React, { useState } from 'react';
 
-function App() {
+const ListButton: React.FC = () => {
     const [selectedButton, setSelectedButton] = useState<string>('Employees');
 
     return (
@@ -36,13 +31,13 @@ function App() {
             </button>
 
             <div>
-                {selectedButton === 'Employees' && <EmployeesPage />}
-                {selectedButton === 'ApprovalRequests' && <ApprovalRequestsPage />}
-                {selectedButton === 'LeaveRequest' && <LeaveRequestsPage />}
-                {selectedButton === 'Project' && <ProjectsPage />}
+                {selectedButton === 'Employees' && <p>Employees content</p>}
+                {selectedButton === 'ApprovalRequests' && <p>Approval Requests content</p>}
+                {selectedButton === 'LeaveRequest' && <p>Leave Request content</p>}
+                {selectedButton === 'Project' && <p>Project content</p>}
             </div>
         </div>
     );
-}
+};
 
-export default App;
+export default ListButton;
