@@ -1,14 +1,11 @@
 import React from 'react';
 import './App.css';
+import EmployeeList from "./EmployeeList";
 
 function App() {
     return (
         <div className="App">
-            <header className="App-header">
-                <p>
-                    Test
-                </p>
-            </header>
+            <EmployeeList />
         </div>
     );
 }

@@ -16,7 +16,7 @@ app.use(cors({
     origin: 'http://localhost:3000'
 }));
 
-const db = mysql.createConnection({
+let db = mysql.createConnection({
     host: "localhost",
     user: 'root',
     password: '',
@@ -59,7 +59,7 @@ const start = async () => {
     try {
         await dbCheck();
 
-        const db = mysql.createConnection({
+        db = mysql.createConnection({
             host: "localhost",
             user: 'root',
             password: '',
@@ -76,19 +76,29 @@ const start = async () => {
         });
 
         // Query the database after confirming connection
-        db.query('SELECT * FROM Employees', (err, results) => {
-            if (err) {
-                console.error("Error fetching records:", err);
-                return;
-            }
-            console.log("Employees in database:");
-            console.log(results);
-        });
-
+        // db.query('SELECT * FROM Employees', (err, results) => {
+        //         if (err) {
+        //             console.error("Error fetching records:", err);
+        //             return;
+        //         }
+        //         console.log("Employees in database:");
+        //         console.log(results);
+        // });
     } catch (e) {
         console.log(e);
     }
 };
 
 start().then(r => r);
+
+app.get('/Lists/Employees', (req, res) => {
+    db.query('SELECT * FROM Employees', (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
+
 
