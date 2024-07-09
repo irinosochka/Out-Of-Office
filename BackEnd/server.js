@@ -8,6 +8,9 @@ const PORT = process.env.PORT || 8082;
 
 const app = express();
 
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
 // Path to a SQL file with a database schema
 const sqlFilePath = path.join(__dirname, 'data.sql');
 
@@ -70,8 +73,6 @@ const start = async () => {
         db.connect(function(err) {
             if (err) throw err;
             console.log("Connected to MySQL!");
-
-            // Start the server only after successful DB connection
             app.listen(PORT, () => console.log("SERVER WORK"));
         });
     } catch (e) {
@@ -80,6 +81,9 @@ const start = async () => {
 };
 
 start().then(r => r);
+
+
+// EMPLOYEE TABLE
 
 app.get('/Lists/Employees', (req, res) => {
     db.query('SELECT * FROM Employees', (err, results) => {
@@ -91,7 +95,21 @@ app.get('/Lists/Employees', (req, res) => {
     });
 });
 
-app.get('/Lists/Leave Requests', (req, res) => {
+app.post('/Lists/Employees', (req, res) => {
+    const employee = req.body;
+    db.query('INSERT INTO Employees SET ?', employee, (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(201).send({ id: results.insertId, ...employee });
+        }
+    });
+});
+
+
+//LEAVE REQUESTS TABLE
+
+app.get('/Lists/LeaveRequests', (req, res) => {
     db.query('SELECT * FROM LeaveRequests', (err, results) => {
         if (err) {
             res.status(500).send(err);
@@ -101,7 +119,10 @@ app.get('/Lists/Leave Requests', (req, res) => {
     });
 });
 
-app.get('/Lists/Approval Requests', (req, res) => {
+
+//APPROVAL REQUESTS TABLE
+
+app.get('/Lists/ApprovalRequests', (req, res) => {
     db.query('SELECT * FROM ApprovalRequests', (err, results) => {
         if (err) {
             res.status(500).send(err);
@@ -110,6 +131,9 @@ app.get('/Lists/Approval Requests', (req, res) => {
         }
     });
 });
+
+
+//PROJECT TABLE
 
 app.get('/Lists/Projects', (req, res) => {
     db.query('SELECT * FROM Projects', (err, results) => {
@@ -120,3 +144,6 @@ app.get('/Lists/Projects', (req, res) => {
         }
     });
 });
+
+
+module.exports = app;

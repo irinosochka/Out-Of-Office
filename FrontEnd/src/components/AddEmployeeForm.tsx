@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { IEmployee } from '../models/IEmployee';
+import axios from 'axios';
+
 
 interface AddEmployeeFormProps {
     onSubmit: (employee: IEmployee) => void;
@@ -13,8 +15,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
         Position: '',
         Status: 'Active',
         PeoplePartner: 0,
-        OutOfOfficeBalance: 0,
-        Photo: ''
+        OutOfOfficeBalance: 0
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -25,12 +26,15 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit({
-            EmployeeID: Math.floor(Math.random() * 1000), // Generate a random ID for demo purposes
-            ...formState
-        });
+        try {
+            const response = await axios.post<IEmployee>('http://localhost:8082/Lists/Employees', formState);
+            onSubmit(response.data);
+            console.log(response.data); // Check the structure and contents
+        } catch (error) {
+            console.error('Error adding data:', error);
+        }
         onClose();
     };
 
@@ -73,3 +77,4 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
 };
 
 export default AddEmployeeForm;
+
