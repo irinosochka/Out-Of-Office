@@ -145,5 +145,29 @@ app.get('/Lists/Projects', (req, res) => {
     });
 });
 
+app.post('/Lists/Projects', (req, res) => {
+    const { ProjectType, StartDate, EndDate, ProjectManager, Comment, Status } = req.body;
+    const sql = 'INSERT INTO Projects (ProjectType, StartDate, EndDate, ProjectManager, Comment, Status) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(sql, [ProjectType, StartDate, EndDate, ProjectManager, Comment, Status], (err, result) => {
+        if (err) {
+            console.error('Error creating project:', err);
+            res.status(500).send(err);
+        } else {
+            res.status(201).send({ id: result.insertId, ProjectType, StartDate, EndDate, ProjectManager, Comment, Status });
+        }
+    });
+});
+
+// app.post('/Lists/Projects', (req, res) => {
+//     const project = req.body;
+//     db.query('INSERT INTO Projects SET ?', project, (err, results) => {
+//         if (err) {
+//             res.status(500).send(err);
+//         } else {
+//             res.status(201).send({ id: results.insertId, ...project });
+//         }
+//     });
+// });
+
 
 module.exports = app;

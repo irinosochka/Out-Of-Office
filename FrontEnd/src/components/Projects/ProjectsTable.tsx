@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {IProject} from "../models/IProjects";
+import {IProject} from "../../models/IProjects";
 
 interface ProjectsTableProps {
     projects: IProject[];
@@ -57,15 +57,15 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects }) => {
                 </tr>
                 </thead>
                 <tbody>
-                {sorted.map((projects, idx) => (
+                {sorted.map((project, idx) => (
                     <tr key={idx}>
-                        <td>{projects.ID}</td>
-                        <td>{projects.ProjectType}</td>
-                        <td>{projects.StartDate.toLocaleDateString()}</td>
-                        <td>{projects.EndDate?.toLocaleDateString()}</td>
-                        <td>{projects.ProjectManager}</td>
-                        <td>{projects.Status}</td>
-                        <td>{projects.Comment}</td>
+                        <td>{project.ID}</td>
+                        <td>{project.ProjectType}</td>
+                        <td>{new Date(project.StartDate).toLocaleDateString()}</td>
+                        <td>{project.EndDate ? new Date(project.EndDate).toLocaleDateString() : undefined}</td>
+                        <td>{project.ProjectManager}</td>
+                        <td>{project.Status}</td>
+                        <td>{project.Comment}</td>
                     </tr>
                 ))}
                 </tbody>

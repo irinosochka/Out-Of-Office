@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IEmployee } from '../models/IEmployee';
+import {IEmployee} from "../../models/IEmployee";
 import axios from 'axios';
 
 
@@ -15,7 +15,8 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
         Position: '',
         Status: 'Active',
         PeoplePartner: 0,
-        OutOfOfficeBalance: 0
+        OutOfOfficeBalance: 0,
+        // Photo: ,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { IEmployee } from '../models/IEmployee';
-import Search from '../common/Search';
+import {IEmployee} from "../../models/IEmployee";
+import Search from "../../common/Search";
 
 interface EmployeeTableProps {
     employees: IEmployee[];

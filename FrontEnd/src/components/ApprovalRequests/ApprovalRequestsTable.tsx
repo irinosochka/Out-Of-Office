@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import {ILeaveRequest} from "../models/ILeaveRequests";
+import {IApprovalRequest} from "../../models/IApprovalRequests";
 
-interface LeaveRequestsTableProps {
-    leaveRequests: ILeaveRequest[];
+interface ApprovalRequestsTableProps {
+    approvalRequests: IApprovalRequest[];
 }
 
-const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }) => {
-    const [sortBy, setSortBy] = useState<keyof ILeaveRequest>('ID');
+const ApprovalRequestsTable: React.FC<ApprovalRequestsTableProps> = ({ approvalRequests }) => {
+    const [sortBy, setSortBy] = useState<keyof IApprovalRequest>('ID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
 
-    const handleSort = (column: keyof ILeaveRequest) => {
+    const handleSort = (column: keyof IApprovalRequest) => {
         if (sortBy === column) {
             // If clicking on the same column, reverse the sort order
             setSortAsc(!sortAsc);
@@ -21,7 +21,7 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }
     };
 
 
-    const sorted = [...leaveRequests].sort((a, b) => {
+    const sorted = [...approvalRequests].sort((a, b) => {
         const aValue = a[sortBy];
         const bValue = b[sortBy];
 
@@ -48,24 +48,20 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }
                 <thead>
                 <tr>
                     <SortableHeader column="ID" title="ID" handleSort={handleSort} />
-                    <SortableHeader column="Employee" title="Employee" handleSort={handleSort} />
-                    <SortableHeader column="AbsenceReason" title="AbsenceReason" handleSort={handleSort} />
-                    <SortableHeader column="StartDate" title="StartDate" handleSort={handleSort} />
-                    <SortableHeader column="EndDate" title="EndDate" handleSort={handleSort} />
+                    <SortableHeader column="Approver" title="Approver" handleSort={handleSort} />
+                    <SortableHeader column="LeaveRequest" title="Leave Request" handleSort={handleSort} />
                     <SortableHeader column="Status" title="Status" handleSort={handleSort} />
                     <SortableHeader column="Comment" title="Comment" handleSort={handleSort} />
-                </tr>
+                    </tr>
                 </thead>
                 <tbody>
-                {sorted.map((leaveRequests, idx) => (
+                {sorted.map((approvalRequest, idx) => (
                     <tr key={idx}>
-                        <td>{leaveRequests.ID}</td>
-                        <td>{leaveRequests.Employee}</td>
-                        <td>{leaveRequests.AbsenceReason}</td>
-                        <td>{leaveRequests.StartDate.toLocaleDateString()}</td>
-                        <td>{leaveRequests.EndDate.toLocaleDateString()}</td>
-                        <td>{leaveRequests.Status}</td>
-                        <td>{leaveRequests.Comment}</td>
+                        <td>{approvalRequest.ID}</td>
+                        <td>{approvalRequest.Approver}</td>
+                        <td>{approvalRequest.LeaveRequest}</td>
+                        <td>{approvalRequest.Status}</td>
+                        <td>{approvalRequest.Comment}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -75,9 +71,9 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }
 };
 
 interface SortableHeaderProps {
-    column: keyof ILeaveRequest;
+    column: keyof IApprovalRequest;
     title: string;
-    handleSort: (column: keyof ILeaveRequest) => void;
+    handleSort: (column: keyof IApprovalRequest) => void;
 }
 
 const SortableHeader: React.FC<SortableHeaderProps> = ({ column, title, handleSort }) => {
@@ -88,4 +84,4 @@ const SortableHeader: React.FC<SortableHeaderProps> = ({ column, title, handleSo
     );
 };
 
-export default LeaveRequestsTable;
+export default ApprovalRequestsTable;

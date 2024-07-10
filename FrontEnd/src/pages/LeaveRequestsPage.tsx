@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {ILeaveRequest} from "../models/ILeaveRequests";
-import LeaveRequestsTable from "../components/LeaveRequestsTable";
+import LeaveRequestsTable from "../components/LeaveRequests/LeaveRequestsTable";
 
 const LeaveRequestsPage: React.FC = () => {
     const [leaveRequests, setLeaveRequests] = useState<ILeaveRequest[]>([]);
