@@ -42,7 +42,7 @@ const MainPage: React.FC = () => {
                 {selectedRole === '' && <p>Please choose a role to continue.</p>}
                 {selectedButton === 'Employees' && selectedRole !== 'Employee' && <EmployeesPage />}
                 {selectedButton === 'ApprovalRequests' && selectedRole !== 'Employee' && <ApprovalRequestsPage />}
-                {selectedButton === 'LeaveRequest' && selectedRole === 'Employee' && <LeaveRequestsPage />}
+                {selectedButton === 'LeaveRequest' && selectedRole !== '' && <LeaveRequestsPage />}
                 {selectedButton === 'Project' && selectedRole !== 'Employee' && <ProjectsPage />}
             </div>
         </div>

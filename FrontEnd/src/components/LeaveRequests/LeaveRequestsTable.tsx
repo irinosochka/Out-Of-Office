@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import {ILeaveRequest} from "../../models/ILeaveRequests";
+import { ILeaveRequest } from '../../models/ILeaveRequests';
+import LeaveRequestModal from './LeaveRequestModal';
 
 interface LeaveRequestsTableProps {
     leaveRequests: ILeaveRequest[];
@@ -8,35 +9,29 @@ interface LeaveRequestsTableProps {
 const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }) => {
     const [sortBy, setSortBy] = useState<keyof ILeaveRequest>('ID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
+    const [selectedLeaveRequest, setSelectedLeaveRequest] = useState<ILeaveRequest | null>(null);
 
     const handleSort = (column: keyof ILeaveRequest) => {
         if (sortBy === column) {
-            // If clicking on the same column, reverse the sort order
             setSortAsc(!sortAsc);
         } else {
-            // If clicking on a different column, set the new column for sorting
             setSortBy(column);
-            setSortAsc(true); // Default to ascending order for the new column
+            setSortAsc(true);
         }
     };
 
+    const handleRowClick = (leaveRequest: ILeaveRequest) => {
+        setSelectedLeaveRequest(leaveRequest);
+    };
 
     const sorted = [...leaveRequests].sort((a, b) => {
         const aValue = a[sortBy];
         const bValue = b[sortBy];
 
         if (typeof aValue === 'string' && typeof bValue === 'string') {
-            if (sortAsc) {
-                return aValue.localeCompare(bValue);
-            } else {
-                return bValue.localeCompare(aValue);
-            }
+            return sortAsc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-            if (sortAsc) {
-                return aValue - bValue;
-            } else {
-                return bValue - aValue;
-            }
+            return sortAsc ? aValue - bValue : bValue - aValue;
         } else {
             return 0; // if aValue or bValue is undefined
         }
@@ -49,16 +44,16 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }
                 <tr>
                     <SortableHeader column="ID" title="ID" handleSort={handleSort} />
                     <SortableHeader column="EmployeeID" title="Employee ID" handleSort={handleSort} />
-                    <SortableHeader column="AbsenceReason" title="AbsenceReason" handleSort={handleSort} />
-                    <SortableHeader column="StartDate" title="StartDate" handleSort={handleSort} />
-                    <SortableHeader column="EndDate" title="EndDate" handleSort={handleSort} />
+                    <SortableHeader column="AbsenceReason" title="Absence Reason" handleSort={handleSort} />
+                    <SortableHeader column="StartDate" title="Start Date" handleSort={handleSort} />
+                    <SortableHeader column="EndDate" title="End Date" handleSort={handleSort} />
                     <SortableHeader column="Status" title="Status" handleSort={handleSort} />
                     <SortableHeader column="Comment" title="Comment" handleSort={handleSort} />
                 </tr>
                 </thead>
                 <tbody>
                 {sorted.map((leaveRequest, idx) => (
-                    <tr key={idx}>
+                    <tr key={idx} onClick={() => handleRowClick(leaveRequest)} style={{ cursor: 'pointer' }}>
                         <td>{leaveRequest.ID}</td>
                         <td>{leaveRequest.EmployeeID}</td>
                         <td>{leaveRequest.AbsenceReason}</td>
@@ -70,6 +65,7 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }
                 ))}
                 </tbody>
             </table>
+            <LeaveRequestModal isOpen={selectedLeaveRequest !== null} onClose={() => setSelectedLeaveRequest(null)} leaveRequest={selectedLeaveRequest} />
         </div>
     );
 };
