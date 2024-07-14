@@ -4,10 +4,12 @@ import {IEmployee} from "../models/IEmployee";
 import EmployeesTable from "../components/Employees/EmployeesTable";
 import Modal from "../common/Modal";
 import AddEmployeeForm from "../components/Employees/AddEmployeeForm";
+import {useRole} from "../context/RoleContext";
 
 const EmployeesPage: React.FC = () => {
     const [employees, setEmployees] = useState<IEmployee[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const { selectedRole } = useRole();
 
     const handleAddEmployee = (employee: IEmployee) => {
         setEmployees([...employees, employee]);
@@ -31,13 +33,17 @@ const EmployeesPage: React.FC = () => {
     return (
         <div>
             <h2>Employee Table</h2>
-            <button onClick={() => setIsModalOpen(true)}>Add Employee</button>
-            <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <AddEmployeeForm
-                    onSubmit={handleAddEmployee}
-                    onClose={() => setIsModalOpen(false)}
-                />
-            </Modal>
+            {selectedRole === 'HR Manager' &&
+                <>
+                    <button onClick={() => setIsModalOpen(true)}>Add Employee</button>
+                    <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                        <AddEmployeeForm
+                            onSubmit={handleAddEmployee}
+                            onClose={() => setIsModalOpen(false)}
+                        />
+                    </Modal>
+                </>
+            }
             <EmployeesTable employees={employees} />
         </div>
     );

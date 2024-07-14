@@ -18,7 +18,7 @@ const MainPage: React.FC = () => {
     useEffect(() => {
         if (selectedRole === 'Employee') {
             setSelectedButton('LeaveRequest');
-        } else if(selectedRole === 'NoRole'){
+        } else if(selectedRole === ''){
             setSelectedButton('');
         } else {
             setSelectedButton('Employees');
