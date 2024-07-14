@@ -5,7 +5,7 @@ interface RoleSelectionProps {
 }
 
 const RoleSelection: React.FC<RoleSelectionProps> = ({ onRoleSelect }) => {
-    const [selectedRole, setSelectedRole] = useState<string>('Employee');
+    const [selectedRole, setSelectedRole] = useState<string>('');
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = e.target.value;
@@ -17,6 +17,7 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({ onRoleSelect }) => {
         <div>
             <label htmlFor="role">Choose your role: </label>
             <select id="role" value={selectedRole} onChange={handleChange}>
+                <option value="NoRole">Select a role</option>
                 <option value="Employee">Employee</option>
                 <option value="HR Manager">HR Manager</option>
                 <option value="Project Manager">Project Manager</option>
