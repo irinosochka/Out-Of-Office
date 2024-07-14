@@ -2,9 +2,16 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {ILeaveRequest} from "../models/ILeaveRequests";
 import LeaveRequestsTable from "../components/LeaveRequests/LeaveRequestsTable";
+import Modal from "../common/Modal";
+import AddLeaveRequestForm from "../components/LeaveRequests/AddLeaveRequestForm";
 
 const LeaveRequestsPage: React.FC = () => {
     const [leaveRequests, setLeaveRequests] = useState<ILeaveRequest[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+    const handleAddLeaveRequests = (leaveRequest: ILeaveRequest) => {
+        setLeaveRequests([...leaveRequests, leaveRequest]);
+    };
 
     useEffect(() => {
         const fetchEmployees = async () => {
@@ -24,6 +31,13 @@ const LeaveRequestsPage: React.FC = () => {
     return (
         <div>
             <h2>Leave Requests Table</h2>
+            <button onClick={() => setIsModalOpen(true)}>Add Leave Request</button>
+            <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <AddLeaveRequestForm
+                    onSubmit={handleAddLeaveRequests}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            </Modal>
             <LeaveRequestsTable leaveRequests={leaveRequests} />
         </div>
     );

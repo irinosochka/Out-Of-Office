@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import {IProject} from "../../models/IProjects";
 import moment from "moment";
+import {ILeaveRequest} from "../../models/ILeaveRequests";
 
-interface AddProjectFormProps {
-    onSubmit: (project: IProject) => void;
+interface AddLeaveRequestFormProps {
+    onSubmit: (leaveRequest: ILeaveRequest) => void;
     onClose: () => void;
 }
 
-const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) => {
-    const [formState, setFormState] = useState<Omit<IProject, 'ID'>>({
-        ProjectType: '',
+const AddLeaveRequestForm: React.FC<AddLeaveRequestFormProps> = ({ onSubmit, onClose }) => {
+    const [formState, setFormState] = useState<Omit<ILeaveRequest, 'ID'>>({
+        EmployeeID: 0,
+        AbsenceReason: '',
         StartDate: new Date(),
-        EndDate: undefined,
-        ProjectManager: 0,
+        EndDate: new Date(),
         Comment: '',
-        Status: 'Active'
+        Status: 'New'
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -23,7 +23,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
         if(name === 'StartDate' || name === 'EndDate'){
             setFormState({
                 ...formState,
-                [name]: value ? new Date(value) : undefined
+                [name]: new Date(value)
             });
         }
         setFormState({
@@ -38,9 +38,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
             const formattedFormState = {
                 ...formState,
                 StartDate: moment(formState.StartDate).format('YYYY-MM-DD'),
-                EndDate: formState.EndDate ? moment(formState.EndDate).format('YYYY-MM-DD') : null,
+                EndDate: moment(formState.EndDate).format('YYYY-MM-DD')
             };
-            const response = await axios.post<IProject>('http://localhost:8082/Lists/Projects', formattedFormState);
+            const response = await axios.post<ILeaveRequest>('http://localhost:8082/Lists/LeaveRequests', formattedFormState);
             onSubmit(response.data);
             console.log(response.data); // Check the structure and contents
         } catch (error) {
@@ -53,8 +53,12 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <label>Project Type</label>
-                <input name="ProjectType" value={formState.ProjectType} onChange={handleChange} required />
+                <label>Employee ID</label>
+                <input type="number" name="EmployeeID" value={formState.EmployeeID} onChange={handleChange} required />
+            </div>
+            <div>
+                <label>Absence Reason</label>
+                <input name="AbsenceReason" value={formState.AbsenceReason} onChange={handleChange} required />
             </div>
             <div>
                 <label>Start Date</label>
@@ -65,12 +69,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
             <div>
                 <label>EndDate</label>
                 <input type="date" name="EndDate"
-                       value={formState.EndDate ? moment(formState.EndDate).format('YYYY-MM-DD') : ''}
-                       onChange={handleChange}/>
-            </div>
-            <div>
-                <label>ProjectManager</label>
-                <input type="number" name="ProjectManager" value={formState.ProjectManager} onChange={handleChange} required />
+                       value={moment(formState.EndDate).format('YYYY-MM-DD')}
+                       onChange={handleChange} required/>
             </div>
             <div>
                 <label>Comment</label>
@@ -78,9 +78,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
             </div>
             <div>
                 <label>Status</label>
-                <select name="Status" value={formState.Status} onChange={handleChange} required>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
+                <select name="Status" value={formState.Status} onChange={handleChange} required disabled>
+                    <option value="New">New</option>
                 </select>
             </div>
             <button type="submit">Add Project</button>
@@ -88,4 +87,4 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
     );
 };
 
-export default AddProjectForm;
+export default AddLeaveRequestForm;

@@ -1,6 +1,6 @@
 export interface ILeaveRequest {
     ID: number;
-    Employee: number;
+    EmployeeID: number;
     AbsenceReason: string;
     StartDate: Date;
     EndDate: Date;

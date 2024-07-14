@@ -48,7 +48,7 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }
                 <thead>
                 <tr>
                     <SortableHeader column="ID" title="ID" handleSort={handleSort} />
-                    <SortableHeader column="Employee" title="Employee" handleSort={handleSort} />
+                    <SortableHeader column="EmployeeID" title="Employee ID" handleSort={handleSort} />
                     <SortableHeader column="AbsenceReason" title="AbsenceReason" handleSort={handleSort} />
                     <SortableHeader column="StartDate" title="StartDate" handleSort={handleSort} />
                     <SortableHeader column="EndDate" title="EndDate" handleSort={handleSort} />
@@ -57,15 +57,15 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }
                 </tr>
                 </thead>
                 <tbody>
-                {sorted.map((leaveRequests, idx) => (
+                {sorted.map((leaveRequest, idx) => (
                     <tr key={idx}>
-                        <td>{leaveRequests.ID}</td>
-                        <td>{leaveRequests.Employee}</td>
-                        <td>{leaveRequests.AbsenceReason}</td>
-                        <td>{leaveRequests.StartDate.toLocaleDateString()}</td>
-                        <td>{leaveRequests.EndDate.toLocaleDateString()}</td>
-                        <td>{leaveRequests.Status}</td>
-                        <td>{leaveRequests.Comment}</td>
+                        <td>{leaveRequest.ID}</td>
+                        <td>{leaveRequest.EmployeeID}</td>
+                        <td>{leaveRequest.AbsenceReason}</td>
+                        <td>{new Date(leaveRequest.StartDate).toLocaleDateString()}</td>
+                        <td>{new Date(leaveRequest.EndDate).toLocaleDateString()}</td>
+                        <td>{leaveRequest.Status}</td>
+                        <td>{leaveRequest.Comment}</td>
                     </tr>
                 ))}
                 </tbody>

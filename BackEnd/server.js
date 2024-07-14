@@ -119,6 +119,42 @@ app.get('/Lists/LeaveRequests', (req, res) => {
     });
 });
 
+// app.post('/Lists/LeaveRequests', (req, res) => {
+//     const leaveRequest = req.body;
+//     db.query('INSERT INTO LeaveRequests SET ?', leaveRequest, (err, results) => {
+//         if (err) {
+//             res.status(500).send(err);
+//         } else {
+//             res.status(201).send({ id: results.insertId, ...leaveRequest });
+//         }
+//     });
+// });
+//
+// app.post('/Lists/LeaveRequests', (req, res) => {
+//     const { EmployeeID, AbsenceReason, StartDate, EndDate, Comment, Status } = req.body;
+//     const sql = 'INSERT INTO LeaveRequests (Employee, AbsenceReason, StartDate, EndDate, Comment, Status) VALUES (?, ?, ?, ?, ?, ?)';
+//     db.query(sql, [EmployeeID, AbsenceReason, StartDate, EndDate, Comment, Status], (err, result) => {
+//         if (err) {
+//             console.error('Error creating project:', err);
+//             res.status(500).send(err);
+//         } else {
+//             res.status(201).send({ id: result.insertId, EmployeeID, AbsenceReason, StartDate, EndDate, Comment, Status });
+//         }
+//     });
+// });
+
+app.post('/Lists/LeaveRequests', (req, res) => {
+    const leaveRequest = req.body;
+    db.query('INSERT INTO LeaveRequests SET ?', leaveRequest, (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(201).send({ id: results.insertId, ...leaveRequest });
+        }
+    });
+});
+
+
 
 //APPROVAL REQUESTS TABLE
 
@@ -146,28 +182,15 @@ app.get('/Lists/Projects', (req, res) => {
 });
 
 app.post('/Lists/Projects', (req, res) => {
-    const { ProjectType, StartDate, EndDate, ProjectManager, Comment, Status } = req.body;
-    const sql = 'INSERT INTO Projects (ProjectType, StartDate, EndDate, ProjectManager, Comment, Status) VALUES (?, ?, ?, ?, ?, ?)';
-    db.query(sql, [ProjectType, StartDate, EndDate, ProjectManager, Comment, Status], (err, result) => {
+    const project = req.body;
+    db.query('INSERT INTO Projects SET ?', project, (err, results) => {
         if (err) {
-            console.error('Error creating project:', err);
             res.status(500).send(err);
         } else {
-            res.status(201).send({ id: result.insertId, ProjectType, StartDate, EndDate, ProjectManager, Comment, Status });
+            res.status(201).send({ id: results.insertId, ...project });
         }
     });
 });
-
-// app.post('/Lists/Projects', (req, res) => {
-//     const project = req.body;
-//     db.query('INSERT INTO Projects SET ?', project, (err, results) => {
-//         if (err) {
-//             res.status(500).send(err);
-//         } else {
-//             res.status(201).send({ id: results.insertId, ...project });
-//         }
-//     });
-// });
 
 
 module.exports = app;

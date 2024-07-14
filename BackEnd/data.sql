@@ -32,7 +32,7 @@ CREATE TABLE ApprovalRequests (
     Status ENUM('New', 'Approved', 'Rejected') NOT NULL,
     Comment TEXT,
     FOREIGN KEY (Approver) REFERENCES Employees(EmployeeID),
-    FOREIGN KEY (LeaveRequestID) REFERENCES LeaveRequests(LeaveRequestID)
+    FOREIGN KEY (LeaveRequestID) REFERENCES LeaveRequests(ID)
 );
 
 CREATE TABLE Projects (
