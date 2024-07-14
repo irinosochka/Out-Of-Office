@@ -1,30 +1,29 @@
 import React, { useState } from 'react';
-import {IEmployee} from "../../models/IEmployee";
+import { IEmployee } from "../../models/IEmployee";
 import Search from "../../common/Search";
 import EmployeeModal from "./EmployeeModal";
+import {useRole} from "../../context/RoleContext";
 
 interface EmployeeTableProps {
     employees: IEmployee[];
 }
 
-const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees }) => {
+const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees}) => {
     const [sortBy, setSortBy] = useState<keyof IEmployee>('EmployeeID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(null);
+    const { selectedRole } = useRole();
 
     const handleSort = (column: keyof IEmployee) => {
         if (sortBy === column) {
-            // If clicking on the same column, reverse the sort order
             setSortAsc(!sortAsc);
         } else {
-            // If clicking on a different column, set the new column for sorting
             setSortBy(column);
-            setSortAsc(true); // Default to ascending order for the new column
+            setSortAsc(true);
         }
     };
 
-    // Function to filter employees based on search term
     const filteredEmployees = searchTerm ? employees.filter(employee =>
         employee.FullName.toLowerCase().includes(searchTerm.toLowerCase())
     ) : employees;
@@ -34,35 +33,30 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         const bValue = b[sortBy];
 
         if (typeof aValue === 'string' && typeof bValue === 'string') {
-            if (sortAsc) {
-                return aValue.localeCompare(bValue);
-            } else {
-                return bValue.localeCompare(aValue);
-            }
+            return sortAsc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-            if (sortAsc) {
-                return aValue - bValue;
-            } else {
-                return bValue - aValue;
-            }
+            return sortAsc ? aValue - bValue : bValue - aValue;
         } else {
-            return 0; // if aValue or bValue is undefined
+            return 0;
         }
     });
 
     const handleRowClick = (employee: IEmployee) => {
-        setSelectedEmployee(employee);
+        if (selectedRole === 'Project Manager') {
+            setSelectedEmployee(employee);
+        } else {
+            alert("Only Project Managers can view employee details.");
+        }
     };
 
     const handleCloseModal = () => {
         setSelectedEmployee(null);
     };
 
-
     return (
         <div>
             <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by name..."
+                    placeholder="Search by name..."
             />
             <table>
                 <thead>
