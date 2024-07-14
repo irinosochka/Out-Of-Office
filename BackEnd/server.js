@@ -119,30 +119,6 @@ app.get('/Lists/LeaveRequests', (req, res) => {
     });
 });
 
-// app.post('/Lists/LeaveRequests', (req, res) => {
-//     const leaveRequest = req.body;
-//     db.query('INSERT INTO LeaveRequests SET ?', leaveRequest, (err, results) => {
-//         if (err) {
-//             res.status(500).send(err);
-//         } else {
-//             res.status(201).send({ id: results.insertId, ...leaveRequest });
-//         }
-//     });
-// });
-//
-// app.post('/Lists/LeaveRequests', (req, res) => {
-//     const { EmployeeID, AbsenceReason, StartDate, EndDate, Comment, Status } = req.body;
-//     const sql = 'INSERT INTO LeaveRequests (Employee, AbsenceReason, StartDate, EndDate, Comment, Status) VALUES (?, ?, ?, ?, ?, ?)';
-//     db.query(sql, [EmployeeID, AbsenceReason, StartDate, EndDate, Comment, Status], (err, result) => {
-//         if (err) {
-//             console.error('Error creating project:', err);
-//             res.status(500).send(err);
-//         } else {
-//             res.status(201).send({ id: result.insertId, EmployeeID, AbsenceReason, StartDate, EndDate, Comment, Status });
-//         }
-//     });
-// });
-
 app.post('/Lists/LeaveRequests', (req, res) => {
     const leaveRequest = req.body;
     db.query('INSERT INTO LeaveRequests SET ?', leaveRequest, (err, results) => {

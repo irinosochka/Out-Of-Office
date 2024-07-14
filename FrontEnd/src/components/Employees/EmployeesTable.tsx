@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {IEmployee} from "../../models/IEmployee";
 import Search from "../../common/Search";
+import EmployeeModal from "./EmployeeModal";
 
 interface EmployeeTableProps {
     employees: IEmployee[];
@@ -10,6 +11,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees }) => {
     const [sortBy, setSortBy] = useState<keyof IEmployee>('EmployeeID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(null);
 
     const handleSort = (column: keyof IEmployee) => {
         if (sortBy === column) {
@@ -48,6 +50,15 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees }) => {
         }
     });
 
+    const handleRowClick = (employee: IEmployee) => {
+        setSelectedEmployee(employee);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedEmployee(null);
+    };
+
+
     return (
         <div>
             <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
@@ -68,7 +79,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                 </thead>
                 <tbody>
                 {sortedEmployees.map((employee, idx) => (
-                    <tr key={idx}>
+                    <tr key={idx} onClick={() => handleRowClick(employee)} style={{ cursor: 'pointer' }}>
                         <td>{employee.EmployeeID}</td>
                         <td>{employee.Photo}</td>
                         <td>{employee.FullName}</td>
@@ -81,6 +92,9 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees }) => {
                 ))}
                 </tbody>
             </table>
+            {selectedEmployee && (
+                <EmployeeModal employee={selectedEmployee} onClose={handleCloseModal} />
+            )}
         </div>
     );
 };
