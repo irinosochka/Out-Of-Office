@@ -3,9 +3,8 @@ import { IEmployee } from "../../models/IEmployee";
 import Search from "../../common/Search";
 import EmployeeModal from "./EmployeeModal";
 import { useRole } from "../../context/RoleContext";
-import axios from "axios";
 import UpdateEmployeeForm from './UpdateEmployeeForm';
-import {ILeaveRequest} from "../../models/ILeaveRequests";
+import { checkEmployeeReferences, deleteEmployee, updateEmployee } from '../../api/EmployeeApi';
 
 interface EmployeeTableProps {
     employees: IEmployee[];
@@ -54,13 +53,9 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
         setEditingEmployee(employee);
     };
 
-
-
-
-
     const handleUpdateEmployee = async (updatedEmployee: IEmployee) => {
         try {
-            const response = await axios.put(`http://localhost:8082/Lists/Employees/${updatedEmployee.ID}`, updatedEmployee);
+            const response = await updateEmployee(updatedEmployee);
             if (response.status === 200) {
                 setEmployees((prevEmployees) =>
                     prevEmployees.map((emp) => (emp.ID === updatedEmployee.ID ? updatedEmployee : emp))
@@ -77,33 +72,13 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
 
     const handleDeactivateEmployee = async (deletedEmployee: IEmployee) => {
         try {
-            // Check if the employee is referenced in the projects or employees table
-            const checkReferencesResponse = await axios.get<{ referenced: boolean }>(
-                `http://localhost:8082/Lists/Employees/${deletedEmployee.ID}/checkReferences`
-            );
-
+            const checkReferencesResponse = await checkEmployeeReferences(deletedEmployee.ID);
             if (checkReferencesResponse.data.referenced) {
                 alert('Cannot delete employee, they are referenced in projects or as a people partner.');
                 return;
             }
 
-            // Check if the employee has leave requests
-            const leaveRequestsResponse = await axios.get<ILeaveRequest[]>(
-                `http://localhost:8082/Lists/Employees/${deletedEmployee.ID}/leaveRequests`
-            );
-
-            if (leaveRequestsResponse.data.length > 0) {
-                // Delete all leave requests for the employee
-                for (const leaveRequest of leaveRequestsResponse.data) {
-                    // First delete approval requests associated with this leave request
-                    await axios.delete(`http://localhost:8082/Lists/ApprovalRequests/${leaveRequest.ID}`);
-                    // Then delete the leave request
-                    await axios.delete(`http://localhost:8082/Lists/LeaveRequests/${leaveRequest.ID}`);
-                }
-            }
-
-            // Delete employee
-            const deleteResponse = await axios.delete(`http://localhost:8082/Lists/Employees/${deletedEmployee.ID}`);
+            const deleteResponse = await deleteEmployee(deletedEmployee.ID);
             if (deleteResponse.status === 200) {
                 setEmployees((prevEmployees) =>
                     prevEmployees.filter((emp) => emp.ID !== deletedEmployee.ID)
@@ -116,8 +91,6 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
             console.error("Failed to delete employee:", error);
         }
     };
-
-
 
     return (
         <div>

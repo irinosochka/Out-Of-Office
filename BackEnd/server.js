@@ -162,37 +162,51 @@ app.get('/Lists/Employees/:id/LeaveRequests', (req, res) => {
     });
 });
 
-//Delete an employee and associated data
 app.delete('/Lists/Employees/:id', (req, res) => {
     const { id } = req.params;
 
-    // Delete leave requests first
-    db.query('DELETE FROM LeaveRequests WHERE EmployeeID = ?', [id], (err, results) => {
+    // Delete approval requests associated with leave requests for the employee
+    db.query('DELETE FROM ApprovalRequests WHERE LeaveRequestID IN (SELECT ID FROM LeaveRequests WHERE EmployeeID = ?)', [id], (err, results) => {
         if (err) {
-            console.error('Failed to delete leave requests:', err);
-            return res.status(500).send(err.message);
+            return db.rollback(() => {
+                console.error('Failed to delete approval requests:', err);
+                res.status(500).send(err.message);
+            });
         }
 
-        // Delete approval requests next
-        db.query('DELETE FROM ApprovalRequests WHERE LeaveRequestID IN (SELECT ID FROM LeaveRequests WHERE EmployeeID = ?)', [id], (err, results) => {
+        // Delete leave requests for the employee
+        db.query('DELETE FROM LeaveRequests WHERE EmployeeID = ?', [id], (err, results) => {
             if (err) {
-                console.error('Failed to delete approval requests:', err);
-                return res.status(500).send(err.message);
+                return db.rollback(() => {
+                    console.error('Failed to delete leave requests:', err);
+                    res.status(500).send(err.message);
+                });
             }
 
-            // Finally, delete the employee
+            // Delete the employee
             db.query('DELETE FROM Employees WHERE ID = ?', [id], (err, results) => {
                 if (err) {
-                    console.error('Failed to delete employee:', err);
-                    return res.status(500).send(err.message);
+                    return db.rollback(() => {
+                        console.error('Failed to delete employee:', err);
+                        res.status(500).send(err.message);
+                    });
                 }
 
-                res.send({ message: 'Employee and associated leave and approval requests deleted', id });
+                // Commit the transaction
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            console.error('Failed to commit transaction:', err);
+                            res.status(500).send(err.message);
+                        });
+                    }
+
+                    res.send({ message: 'Employee and associated leave and approval requests deleted', id });
+                });
             });
         });
     });
 });
-
 
 
 //LEAVE REQUESTS TABLE
