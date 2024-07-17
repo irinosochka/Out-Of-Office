@@ -106,6 +106,94 @@ app.post('/Lists/Employees', (req, res) => {
     });
 });
 
+app.get('/Lists/Employees/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('SELECT * FROM Employees WHERE ID = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results[0]);
+        }
+    });
+});
+
+app.put('/Lists/Employees/:id', (req, res) => {
+    const { id } = req.params;
+    const employee = req.body;
+    db.query('UPDATE Employees SET ? WHERE ID = ?', [employee, id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send({ id, ...employee });
+        }
+    });
+});
+
+
+//DELETING EMPLOYEE
+
+// Check if an employee is referenced in the tables
+app.get('/Lists/Employees/:id/CheckReferences', (req, res) => {
+    const { id } = req.params;
+    db.query(
+        'SELECT COUNT(*) AS projectCount FROM projects WHERE ProjectManager = ?; SELECT COUNT(*) AS partnerCount FROM employees WHERE PeoplePartner = ?;',
+        [id, id],
+        (err, results) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                const projectCount = results[0][0].projectCount;
+                const partnerCount = results[1][0].partnerCount;
+                res.send({ referenced: projectCount > 0 || partnerCount > 0 });
+            }
+        }
+    );
+});
+
+// Check if an employee has leave requests
+app.get('/Lists/Employees/:id/LeaveRequests', (req, res) => {
+    const { id } = req.params;
+    db.query('SELECT * FROM LeaveRequests WHERE EmployeeID = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+//Delete an employee and associated data
+app.delete('/Lists/Employees/:id', (req, res) => {
+    const { id } = req.params;
+
+    // Delete leave requests first
+    db.query('DELETE FROM LeaveRequests WHERE EmployeeID = ?', [id], (err, results) => {
+        if (err) {
+            console.error('Failed to delete leave requests:', err);
+            return res.status(500).send(err.message);
+        }
+
+        // Delete approval requests next
+        db.query('DELETE FROM ApprovalRequests WHERE LeaveRequestID IN (SELECT ID FROM LeaveRequests WHERE EmployeeID = ?)', [id], (err, results) => {
+            if (err) {
+                console.error('Failed to delete approval requests:', err);
+                return res.status(500).send(err.message);
+            }
+
+            // Finally, delete the employee
+            db.query('DELETE FROM Employees WHERE ID = ?', [id], (err, results) => {
+                if (err) {
+                    console.error('Failed to delete employee:', err);
+                    return res.status(500).send(err.message);
+                }
+
+                res.send({ message: 'Employee and associated leave and approval requests deleted', id });
+            });
+        });
+    });
+});
+
+
 
 //LEAVE REQUESTS TABLE
 
@@ -130,6 +218,28 @@ app.post('/Lists/LeaveRequests', (req, res) => {
     });
 });
 
+app.delete('/Lists/LeaveRequests/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('DELETE FROM LeaveRequests WHERE ID = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send({ message: 'LeaveRequests deleted', id });
+        }
+    });
+});
+
+app.get('/Lists/LeaveRequests/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('SELECT * FROM LeaveRequests WHERE ID = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results[0]);
+        }
+    });
+});
+
 
 
 //APPROVAL REQUESTS TABLE
@@ -141,6 +251,17 @@ app.get('/Lists/ApprovalRequests', (req, res) => {
         } else {
             res.json(results);
         }
+    });
+});
+
+app.delete('/Lists/ApprovalRequests/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('DELETE FROM ApprovalRequests WHERE ID = ?', [id], (err, results) => {
+        if (err) {
+            console.error('Failed to delete approval request:', err);
+            return res.status(500).send(err.message);
+        }
+        res.send({ message: 'Approval request deleted', id });
     });
 });
 

@@ -1,7 +1,7 @@
 export interface IApprovalRequest {
     ID: number;
     Approver: number;
-    LeaveRequest: number;
+    LeaveRequestID: number;
     Status: 'New' | 'Approved' | 'Rejected';
     Comment?: string;
 }

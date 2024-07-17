@@ -82,7 +82,7 @@ const AddLeaveRequestForm: React.FC<AddLeaveRequestFormProps> = ({ onSubmit, onC
                     <option value="New">New</option>
                 </select>
             </div>
-            <button type="submit">Add Project</button>
+            <button type="submit">Add Request</button>
         </form>
     );
 };

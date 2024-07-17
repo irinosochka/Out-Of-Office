@@ -44,7 +44,7 @@ const EmployeesPage: React.FC = () => {
                     </Modal>
                 </>
             }
-            <EmployeesTable employees={employees} />
+            <EmployeesTable employees={employees} setEmployees={setEmployees} />
         </div>
     );
 };

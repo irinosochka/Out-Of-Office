@@ -1,40 +1,35 @@
-import React, { useState } from 'react';
-import {IEmployee} from "../../models/IEmployee";
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { IEmployee } from '../../models/IEmployee';
 
-
-interface AddEmployeeFormProps {
-    onSubmit: (employee: IEmployee) => void;
+interface UpdateEmployeeFormProps {
+    employee: IEmployee;
+    onSubmit: (updatedEmployee: IEmployee) => void;
     onClose: () => void;
 }
 
-const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) => {
-    const [formState, setFormState] = useState<Omit<IEmployee, 'ID'>>({
-        FullName: '',
-        Subdivision: '',
-        Position: '',
-        Status: 'Active',
-        PeoplePartner: 0,
-        OutOfOfficeBalance: 0,
-        // Photo: ,
-    });
+const UpdateEmployeeForm: React.FC<UpdateEmployeeFormProps> = ({ employee, onSubmit, onClose }) => {
+    const [formState, setFormState] = useState<IEmployee>(employee);
+
+    useEffect(() => {
+        setFormState(employee);
+    }, [employee]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormState({
             ...formState,
-            [name]: value
+            [name]: value,
         });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post<IEmployee>('http://localhost:8082/Lists/Employees', formState);
+            const response = await axios.put<IEmployee>(`http://localhost:8082/Lists/Employees/${formState.ID}`, formState);
             onSubmit(response.data);
-            console.log(response.data); // Check the structure and contents
         } catch (error) {
-            console.error('Error adding data:', error);
+            console.error('Error updating data:', error);
         }
         onClose();
     };
@@ -72,10 +67,9 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
                 <label>Photo</label>
                 <input type="file" name="Photo" value={formState.Photo} onChange={handleChange} />
             </div>
-            <button type="submit">Add Employee</button>
+            <button type="submit">Update Employee</button>
         </form>
     );
 };
 
-export default AddEmployeeForm;
-
+export default UpdateEmployeeForm;

@@ -14,7 +14,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ employee, onClose }) => {
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <h2>Employee Details</h2>
-                <p><strong>ID:</strong> {employee.EmployeeID}</p>
+                <p><strong>ID:</strong> {employee.ID}</p>
                 <p><strong>Photo:</strong> {employee.Photo}</p>
                 <p><strong>Full Name:</strong> {employee.FullName}</p>
                 <p><strong>Subdivision:</strong> {employee.Subdivision}</p>

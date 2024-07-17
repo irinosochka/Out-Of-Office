@@ -1,5 +1,5 @@
 export interface IEmployee {
-    EmployeeID: number;
+    ID: number;
     FullName: string;
     Subdivision: string;
     Position: string;

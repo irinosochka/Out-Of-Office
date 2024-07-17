@@ -49,7 +49,7 @@ const ApprovalRequestsTable: React.FC<ApprovalRequestsTableProps> = ({ approvalR
                 <tr>
                     <SortableHeader column="ID" title="ID" handleSort={handleSort} />
                     <SortableHeader column="Approver" title="Approver" handleSort={handleSort} />
-                    <SortableHeader column="LeaveRequest" title="Leave Request" handleSort={handleSort} />
+                    <SortableHeader column="LeaveRequestID" title="Leave Request ID" handleSort={handleSort} />
                     <SortableHeader column="Status" title="Status" handleSort={handleSort} />
                     <SortableHeader column="Comment" title="Comment" handleSort={handleSort} />
                     </tr>
@@ -59,7 +59,7 @@ const ApprovalRequestsTable: React.FC<ApprovalRequestsTableProps> = ({ approvalR
                     <tr key={idx}>
                         <td>{approvalRequest.ID}</td>
                         <td>{approvalRequest.Approver}</td>
-                        <td>{approvalRequest.LeaveRequest}</td>
+                        <td>{approvalRequest.LeaveRequestID}</td>
                         <td>{approvalRequest.Status}</td>
                         <td>{approvalRequest.Comment}</td>
                     </tr>

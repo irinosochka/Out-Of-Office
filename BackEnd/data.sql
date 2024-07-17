@@ -3,7 +3,7 @@ CREATE DATABASE out_of_office;
 USE out_of_office;
 
 CREATE TABLE Employees (
-    EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     FullName VARCHAR(255) NOT NULL,
     Subdivision VARCHAR(255) NOT NULL,
     Position VARCHAR(255) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE Employees (
     PeoplePartner INT,
     OutOfOfficeBalance INT NOT NULL,
     Photo BLOB,
-    FOREIGN KEY (PeoplePartner) REFERENCES Employees(EmployeeID)
+    FOREIGN KEY (PeoplePartner) REFERENCES Employees(ID)
 );
 
 CREATE TABLE LeaveRequests (
@@ -22,7 +22,7 @@ CREATE TABLE LeaveRequests (
     EndDate DATE NOT NULL,
     Comment TEXT,
     Status ENUM('New', 'Submitted', 'Approved', 'Rejected', 'Canceled') NOT NULL,
-    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(ID)
 );
 
 CREATE TABLE ApprovalRequests (
@@ -31,7 +31,7 @@ CREATE TABLE ApprovalRequests (
     LeaveRequestID INT,
     Status ENUM('New', 'Approved', 'Rejected') NOT NULL,
     Comment TEXT,
-    FOREIGN KEY (Approver) REFERENCES Employees(EmployeeID),
+    FOREIGN KEY (Approver) REFERENCES Employees(ID),
     FOREIGN KEY (LeaveRequestID) REFERENCES LeaveRequests(ID)
 );
 
@@ -43,5 +43,5 @@ CREATE TABLE Projects (
     ProjectManager INT,
     Comment TEXT,
     Status ENUM('Active', 'Inactive') NOT NULL,
-    FOREIGN KEY (ProjectManager) REFERENCES Employees(EmployeeID)
+    FOREIGN KEY (ProjectManager) REFERENCES Employees(ID)
 );
