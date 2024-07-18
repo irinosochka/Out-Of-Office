@@ -303,5 +303,41 @@ app.post('/Lists/Projects', (req, res) => {
     });
 });
 
+app.get('/Lists/Projects/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('SELECT * FROM Projects WHERE ID = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results[0]);
+        }
+    });
+});
+
+app.put('/Lists/Projects/:id', (req, res) => {
+    const { id } = req.params;
+    const project = req.body;
+    db.query('UPDATE Projects SET ? WHERE ID = ?', [project, id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send({ id, ...project });
+        }
+    });
+});
+
+app.delete('/Lists/Projects/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'DELETE FROM Projects WHERE ID = ?';
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('Error deleting project:', err);
+            res.status(500).send(err);
+        } else {
+            res.send({ message: 'Project deleted', id });
+        }
+    });
+});
+
 
 module.exports = app;

@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import {IProject} from "../../models/IProjects";
+import {updateProject} from "../../api/ProjectApi";
+import {useRole} from "../../context/RoleContext";
+import moment from "moment";
+import UpdateProjectForm from "./UpdateProjectForm";
 
 interface ProjectsTableProps {
     projects: IProject[];
+    setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
 }
 
-const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects }) => {
+const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) => {
     const [sortBy, setSortBy] = useState<keyof IProject>('ID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
+    const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
+    const [editingProject, setEditingProject] = useState<IProject | null>(null);
+    const { selectedRole } = useRole();
 
     const handleSort = (column: keyof IProject) => {
         if (sortBy === column) {
@@ -42,6 +50,48 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects }) => {
         }
     });
 
+    const handleCloseModal = () => {
+        setSelectedProject(null);
+    };
+
+    const handleEditProject = (project: IProject) => {
+        setEditingProject(project);
+    };
+
+    const handleUpdateProject = async (updatedProject: IProject) => {
+        const formattedProject = {
+            ...updatedProject,
+            StartDate: moment(updatedProject.StartDate).format('YYYY-MM-DD'),
+            EndDate: updatedProject.EndDate ? moment(updatedProject.EndDate).format('YYYY-MM-DD') : null,
+        };
+
+        try {
+            console.log('Updating project with payload:', formattedProject);
+            const response = await updateProject(formattedProject);
+            if (response.status === 200) {
+                setProjects((prevProjects) =>
+                    prevProjects.map((proj) => (proj.ID === updatedProject.ID ? updatedProject : proj))
+                );
+                console.log("Project updated:", response.data);
+            } else {
+                console.error("Failed to update project, status:", response.status);
+                alert(`Failed to update project: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.error("Failed to update project:", error);
+            alert(`Failed to update project: ${error}`);
+        }
+        setEditingProject(null);
+    };
+
+
+
+    const handleStatusChange = async (project: IProject) => {
+        const updatedStatus: 'Active' | 'Inactive' = project.Status === 'Active' ? 'Inactive' : 'Active';
+        const updatedProject: IProject = { ...project, Status: updatedStatus };
+        await handleUpdateProject(updatedProject);
+    };
+
     return (
         <div>
             <table>
@@ -58,7 +108,7 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects }) => {
                 </thead>
                 <tbody>
                 {sorted.map((project, idx) => (
-                    <tr key={idx}>
+                    <tr key={idx} onClick={() => setSelectedProject(project)} style={{ cursor: 'pointer' }}>
                         <td>{project.ID}</td>
                         <td>{project.ProjectType}</td>
                         <td>{new Date(project.StartDate).toLocaleDateString()}</td>
@@ -66,10 +116,26 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects }) => {
                         <td>{project.ProjectManager}</td>
                         <td>{project.Status}</td>
                         <td>{project.Comment}</td>
+                        {
+                            selectedRole === 'Project Manager' &&
+                            <td>
+                                <button onClick={(e) => { e.stopPropagation(); handleEditProject(project); }}>Edit</button>
+                                <button onClick={(e) => { e.stopPropagation(); handleStatusChange(project); }}>
+                                    {project.Status === 'Active' ? 'Deactivate' : 'Activate'}
+                                </button>
+                            </td>
+                        }
                     </tr>
                 ))}
                 </tbody>
             </table>
+            {editingProject && (
+                <UpdateProjectForm
+                    project={editingProject}
+                    onSubmit={handleUpdateProject}
+                    onClose={() => setEditingProject(null)}
+                />
+            )}
         </div>
     );
 };

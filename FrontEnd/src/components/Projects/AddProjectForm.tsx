@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 import { IProject } from "../../models/IProjects";
 import moment from "moment";
 import { projectTypes } from "../../constants/Lists";
 import {IEmployee} from "../../models/IEmployee";
 import {getEmployees} from "../../api/EmployeeApi";
+import {addProject} from "../../api/ProjectApi";
 
 interface AddProjectFormProps {
     onSubmit: (project: IProject) => void;
@@ -66,15 +66,17 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
 
             const formattedFormState = {
                 ...formState,
-                StartDate: startDate.format('YYYY-MM-DD'),
-                EndDate: endDate ? endDate.format('YYYY-MM-DD') : null,
+                StartDate: moment(formState.StartDate).format('YYYY-MM-DD'),
+                EndDate: formState.EndDate ? moment(formState.EndDate).format('YYYY-MM-DD') : null,
             };
 
-            const response = await axios.post<IProject>('http://localhost:8082/Lists/Projects', formattedFormState);
+            const response = await addProject(formattedFormState);
             onSubmit(response.data);
+            console.log(response.data); // Check the structure and contents
         } catch (error) {
             console.error('Error adding data:', error);
         }
+        console.log(new Date(formState.StartDate))
         onClose();
     };
 
