@@ -5,5 +5,5 @@ export interface ILeaveRequest {
     StartDate: Date;
     EndDate: Date;
     Comment?: string;
-    Status: 'New' | 'Submitted' | 'Approved' | 'Rejected';
+    Status: 'New' | 'Submitted' | 'Canceled' | 'Approved' | 'Rejected';
 }

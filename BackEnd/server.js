@@ -221,6 +221,17 @@ app.get('/Lists/LeaveRequests', (req, res) => {
     });
 });
 
+app.get('/Lists/LeaveRequests/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('SELECT * FROM LeaveRequests WHERE ID = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results[0]);
+        }
+    });
+});
+
 app.post('/Lists/LeaveRequests', (req, res) => {
     const leaveRequest = req.body;
     db.query('INSERT INTO LeaveRequests SET ?', leaveRequest, (err, results) => {
@@ -232,6 +243,18 @@ app.post('/Lists/LeaveRequests', (req, res) => {
     });
 });
 
+app.put('/Lists/LeaveRequests/:id', (req, res) => {
+    const { id } = req.params;
+    const request = req.body;
+    db.query('UPDATE LeaveRequests SET ? WHERE ID = ?', [request, id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send({ id, ...request });
+        }
+    });
+});
+
 app.delete('/Lists/LeaveRequests/:id', (req, res) => {
     const { id } = req.params;
     db.query('DELETE FROM LeaveRequests WHERE ID = ?', [id], (err, results) => {
@@ -239,17 +262,6 @@ app.delete('/Lists/LeaveRequests/:id', (req, res) => {
             res.status(500).send(err);
         } else {
             res.send({ message: 'LeaveRequests deleted', id });
-        }
-    });
-});
-
-app.get('/Lists/LeaveRequests/:id', (req, res) => {
-    const { id } = req.params;
-    db.query('SELECT * FROM LeaveRequests WHERE ID = ?', [id], (err, results) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.json(results[0]);
         }
     });
 });
