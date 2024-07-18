@@ -17,21 +17,18 @@ interface ProjectsTableProps {
     projects: IProject[];
     setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
     projectManagers: IEmployee[];
-    isModalOpen: boolean;
-    setIsModalOpen: (open: boolean) => void;
 }
 
 const ProjectsTable: React.FC<ProjectsTableProps> = ({
                                                          projects,
                                                          setProjects,
                                                          projectManagers,
-                                                         isModalOpen,
-                                                         setIsModalOpen
                                                      }) => {
     const { sortBy, sortAsc, handleSort } = useSort<IProject>('ID');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const {selectedRole} = useRole();
 
     const filteredProjects = searchTerm

@@ -8,7 +8,6 @@ import {getEmployees} from "../api/EmployeeApi";
 const ProjectsPage: React.FC = () => {
     const [projects, setProjects] = useState<IProject[]>([]);
     const [projectManagers, setProjectManagers] = useState<IEmployee[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -48,8 +47,6 @@ const ProjectsPage: React.FC = () => {
             projects={projects}
             setProjects={setProjects}
             projectManagers={projectManagers}
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
         />
     );
 };

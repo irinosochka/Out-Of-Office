@@ -9,6 +9,8 @@ import { checkEmployeeReferences, deleteEmployee, updateEmployee } from '../../a
 import '../../styles/tableStyles.scss';
 import {sortArray} from "../../utils/utils";
 import {useSort} from "../../hooks/useSort";
+import Modal from "../../common/Modal";
+import AddEmployeeForm from "./AddEmployeeForm";
 
 interface EmployeeTableProps {
     employees: IEmployee[];
@@ -20,6 +22,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(null);
     const [editingEmployee, setEditingEmployee] = useState<IEmployee | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const { selectedRole } = useRole();
 
     const filteredEmployees = searchTerm
@@ -29,6 +32,10 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
         : employees;
 
     const sortedEmployees = sortArray(filteredEmployees, sortBy, sortAsc);
+
+    const handleAddEmployee = (employee: IEmployee) => {
+        setEmployees([...employees, employee]);
+    };
 
     const handleCloseModal = () => {
         setSelectedEmployee(null);
@@ -86,6 +93,11 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
     return (
         <div>
             <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by name..." />
+            {selectedRole === 'HR Manager' &&
+                <>
+                    <button onClick={() => setIsModalOpen(true)}>Add Employee</button>
+                </>
+            }
             <table className="table">
                 <thead>
                 <tr>
@@ -124,6 +136,12 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
                 ))}
                 </tbody>
             </table>
+            <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <AddEmployeeForm
+                    onSubmit={handleAddEmployee}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            </Modal>
             {selectedEmployee && (
                 <EmployeeModal employee={selectedEmployee} onClose={handleCloseModal} />
             )}
