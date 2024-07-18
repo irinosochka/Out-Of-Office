@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import {IProject} from "../../models/IProjects";
-import {updateProject} from "../../api/ProjectApi";
+import {IProject} from "../../models/IProject";
+import {deleteProject, updateProject} from "../../api/ProjectApi";
 import {useRole} from "../../context/RoleContext";
 import moment from "moment";
 import UpdateProjectForm from "./UpdateProjectForm";
+import ProjectModal from "./ProjectModal";
 
 interface ProjectsTableProps {
     projects: IProject[];
@@ -54,6 +55,22 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
         setSelectedProject(null);
     };
 
+    const handleDeleteProject = async (deletedProject: IProject) => {
+        try{
+            const deleteResponse = await deleteProject(deletedProject.ID)
+            if (deleteResponse.status === 200) {
+                setProjects((prevProjects) =>
+                    prevProjects.filter((proj) => proj.ID !== deletedProject.ID)
+                );
+                console.log("Employee deleted:", deletedProject);
+            } else {
+                console.error("Failed to delete employee, status:", deleteResponse.status);
+            }
+        }catch (error) {
+            console.error("Failed to delete project:", error);
+        }
+    }
+
     const handleEditProject = (project: IProject) => {
         setEditingProject(project);
     };
@@ -75,11 +92,9 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
                 console.log("Project updated:", response.data);
             } else {
                 console.error("Failed to update project, status:", response.status);
-                alert(`Failed to update project: ${response.statusText}`);
             }
         } catch (error) {
             console.error("Failed to update project:", error);
-            alert(`Failed to update project: ${error}`);
         }
         setEditingProject(null);
     };
@@ -123,12 +138,19 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
                                 <button onClick={(e) => { e.stopPropagation(); handleStatusChange(project); }}>
                                     {project.Status === 'Active' ? 'Deactivate' : 'Activate'}
                                 </button>
+                                <button onClick={(e) => { e.stopPropagation(); handleDeleteProject(project); }}>Delete</button>
                             </td>
                         }
                     </tr>
                 ))}
                 </tbody>
             </table>
+            {selectedProject &&
+                <ProjectModal
+                    project={selectedProject}
+                    onClose={handleCloseModal}
+                />
+            }
             {editingProject && (
                 <UpdateProjectForm
                     project={editingProject}

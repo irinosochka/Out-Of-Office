@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {IProject} from "../models/IProjects";
+import {IProject} from "../models/IProject";
 
 const API_URL = 'http://localhost:8082/Lists/Projects';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from '../../common/Modal';
-import { ILeaveRequest } from '../../models/ILeaveRequests';
+import { ILeaveRequest } from '../../models/ILeaveRequest';
 
 interface LeaveRequestModalProps {
     isOpen: boolean;

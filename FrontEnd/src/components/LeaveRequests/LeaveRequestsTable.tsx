@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ILeaveRequest } from '../../models/ILeaveRequests';
+import { ILeaveRequest } from '../../models/ILeaveRequest';
 import LeaveRequestModal from './LeaveRequestModal';
 
 interface LeaveRequestsTableProps {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {IApprovalRequest} from "../models/IApprovalRequests";
+import {IApprovalRequest} from "../models/IApprovalRequest";
 import ApprovalRequestsTable from "../components/ApprovalRequests/ApprovalRequestsTable";
 
 const ApprovalRequestsPage: React.FC = () => {

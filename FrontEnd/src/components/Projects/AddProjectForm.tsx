@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { IProject } from "../../models/IProjects";
+import { IProject } from "../../models/IProject";
 import moment from "moment";
 import { projectTypes } from "../../constants/Lists";
 import {IEmployee} from "../../models/IEmployee";

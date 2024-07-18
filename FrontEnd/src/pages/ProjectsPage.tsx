@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IProject } from '../models/IProjects';
+import { IProject } from '../models/IProject';
 import ProjectsTable from '../components/Projects/ProjectsTable';
 import Modal from '../common/Modal';
 import AddProjectForm from '../components/Projects/AddProjectForm';

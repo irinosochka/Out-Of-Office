@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import moment from "moment";
-import {ILeaveRequest} from "../../models/ILeaveRequests";
+import {ILeaveRequest} from "../../models/ILeaveRequest";
 
 interface AddLeaveRequestFormProps {
     onSubmit: (leaveRequest: ILeaveRequest) => void;

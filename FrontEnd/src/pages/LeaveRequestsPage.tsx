@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {ILeaveRequest} from "../models/ILeaveRequests";
+import {ILeaveRequest} from "../models/ILeaveRequest";
 import LeaveRequestsTable from "../components/LeaveRequests/LeaveRequestsTable";
 import Modal from "../common/Modal";
 import AddLeaveRequestForm from "../components/LeaveRequests/AddLeaveRequestForm";

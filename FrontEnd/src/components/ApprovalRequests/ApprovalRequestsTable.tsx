@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {IApprovalRequest} from "../../models/IApprovalRequests";
+import {IApprovalRequest} from "../../models/IApprovalRequest";
 
 interface ApprovalRequestsTableProps {
     approvalRequests: IApprovalRequest[];
