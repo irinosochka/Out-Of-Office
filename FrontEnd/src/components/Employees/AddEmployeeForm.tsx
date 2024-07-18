@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import {IEmployee} from "../../models/IEmployee";
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { IEmployee } from "../../models/IEmployee";
+import { subdivisions, positionsBySubdivision } from "../../constants/Lists";
+import {addEmployee, getEmployees} from "../../api/EmployeeApi";
 
 
 interface AddEmployeeFormProps {
@@ -16,8 +17,25 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
         Status: 'Active',
         PeoplePartner: 0,
         OutOfOfficeBalance: 0,
-        // Photo: ,
     });
+
+    const [hrManagers, setHrManagers] = useState<IEmployee[]>([]);
+
+    useEffect(() => {
+        const fetchHRManagers = async () => {
+            try {
+                const response = await getEmployees();
+                const filteredManagers = response.data.filter(employee =>
+                    employee.Subdivision === 'HR' && employee.Position === 'HR Manager'
+                );
+                setHrManagers(filteredManagers);
+            } catch (error) {
+                console.error('Error fetching HR managers:', error);
+            }
+        };
+
+        fetchHRManagers();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -27,16 +45,31 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
         });
     };
 
+    const handleSubdivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { value } = e.target;
+        setFormState({
+            ...formState,
+            Subdivision: value,
+            Position: '',
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const response = await axios.post<IEmployee>('http://localhost:8082/Lists/Employees', formState);
-            onSubmit(response.data);
-            console.log(response.data); // Check the structure and contents
-        } catch (error) {
-            console.error('Error adding data:', error);
+        if(formState.OutOfOfficeBalance < 0){
+            alert('Out-Of-Office Balance cannot be less then 0')
+        } else {
+            try {
+                const response = await addEmployee({
+                    ...formState,
+                    PeoplePartner: formState.PeoplePartner
+                });
+                onSubmit(response.data);
+            } catch (error) {
+                console.error('Error adding data:', error);
+            }
+            onClose();
         }
-        onClose();
     };
 
     return (
@@ -47,11 +80,25 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
             </div>
             <div>
                 <label>Subdivision</label>
-                <input name="Subdivision" value={formState.Subdivision} onChange={handleChange} required />
+                <select name="Subdivision" value={formState.Subdivision} onChange={handleSubdivisionChange} required>
+                    <option value="">Select Subdivision</option>
+                    {subdivisions.map(subdivision => (
+                        <option key={subdivision} value={subdivision}>
+                            {subdivision}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div>
                 <label>Position</label>
-                <input name="Position" value={formState.Position} onChange={handleChange} required />
+                <select name="Position" value={formState.Position} onChange={handleChange} required>
+                    <option value="">Select Position</option>
+                    {formState.Subdivision && positionsBySubdivision[formState.Subdivision].map(position => (
+                        <option key={position} value={position}>
+                            {position}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div>
                 <label>Status</label>
@@ -62,15 +109,18 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
             </div>
             <div>
                 <label>People Partner</label>
-                <input type="number" name="PeoplePartner" value={formState.PeoplePartner} onChange={handleChange} required />
+                <select name="PeoplePartner" value={formState.PeoplePartner.toString()} onChange={handleChange} required>
+                    <option value="">Select People Partner</option>
+                    {hrManagers.map(manager => (
+                        <option key={manager.ID} value={manager.ID.toString()}>
+                            {manager.ID} - {manager.FullName}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div>
-                <label>Out Of Office Balance</label>
+                <label>Out-Of-Office Balance</label>
                 <input type="number" name="OutOfOfficeBalance" value={formState.OutOfOfficeBalance} onChange={handleChange} required />
-            </div>
-            <div>
-                <label>Photo</label>
-                <input type="file" name="Photo" value={formState.Photo} onChange={handleChange} />
             </div>
             <button type="submit">Add Employee</button>
         </form>
@@ -78,4 +128,3 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
 };
 
 export default AddEmployeeForm;
-

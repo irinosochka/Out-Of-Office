@@ -3,6 +3,14 @@ import { IEmployee } from '../models/IEmployee';
 
 const API_URL = 'http://localhost:8082/Lists/Employees';
 
+export const getEmployees = async () => {
+    return axios.get<IEmployee[]>(`${API_URL}`);
+}
+
+export const addEmployee = async (employee: Omit<IEmployee, 'ID'>) => {
+    return axios.post<IEmployee>(`${API_URL}`, employee);
+}
+
 export const checkEmployeeReferences = async (employeeId: number) => {
     return axios.get<{ referenced: boolean }>(`${API_URL}/${employeeId}/checkReferences`);
 };

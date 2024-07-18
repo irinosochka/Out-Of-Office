@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import {IEmployee} from "../models/IEmployee";
 import EmployeesTable from "../components/Employees/EmployeesTable";
 import Modal from "../common/Modal";
 import AddEmployeeForm from "../components/Employees/AddEmployeeForm";
 import {useRole} from "../context/RoleContext";
+import {getEmployees} from "../api/EmployeeApi";
 
 const EmployeesPage: React.FC = () => {
     const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -18,8 +18,7 @@ const EmployeesPage: React.FC = () => {
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
-                const response = await axios.get<IEmployee[]>('http://localhost:8082/Lists/Employees');
-                console.log(response.data); // Check the structure and contents
+                const response = await getEmployees();
                 setEmployees(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
