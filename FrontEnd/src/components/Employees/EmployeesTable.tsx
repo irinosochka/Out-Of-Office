@@ -6,6 +6,8 @@ import { useRole } from "../../context/RoleContext";
 import UpdateEmployeeForm from './UpdateEmployeeForm';
 import { checkEmployeeReferences, deleteEmployee, updateEmployee } from '../../api/EmployeeApi';
 
+import '../../styles/tableStyles.scss';
+
 interface EmployeeTableProps {
     employees: IEmployee[];
     setEmployees: React.Dispatch<React.SetStateAction<IEmployee[]>>;
@@ -101,7 +103,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
     return (
         <div>
             <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by name..." />
-            <table>
+            <table className="table">
                 <thead>
                 <tr>
                     <SortableHeader column="ID" title="ID" handleSort={handleSort} />

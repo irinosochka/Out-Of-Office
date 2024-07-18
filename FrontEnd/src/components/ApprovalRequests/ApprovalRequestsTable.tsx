@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {IApprovalRequest} from "../../models/IApprovalRequest";
 
+import '../../styles/tableStyles.scss';
+
 interface ApprovalRequestsTableProps {
     approvalRequests: IApprovalRequest[];
 }
@@ -44,7 +46,7 @@ const ApprovalRequestsTable: React.FC<ApprovalRequestsTableProps> = ({ approvalR
 
     return (
         <div>
-            <table>
+            <table className="table">
                 <thead>
                 <tr>
                     <SortableHeader column="ID" title="ID" handleSort={handleSort} />

@@ -1,78 +1,65 @@
-import React, {useEffect, useState} from 'react';
-import {IProject} from "../../models/IProject";
-import {deleteProject, updateProject} from "../../api/ProjectApi";
-import {useRole} from "../../context/RoleContext";
+import React, { useState } from 'react';
+import { IProject } from "../../models/IProject";
+import { deleteProject, updateProject } from "../../api/ProjectApi";
 import moment from "moment";
 import UpdateProjectForm from "./UpdateProjectForm";
 import ProjectModal from "./ProjectModal";
-import {IEmployee} from "../../models/IEmployee";
-import {getEmployees} from "../../api/EmployeeApi";
+import { IEmployee } from "../../models/IEmployee";
 import Search from "../../common/Search";
+import '../../styles/tableStyles.scss';
+import Modal from "../../common/Modal";
+import AddProjectForm from "./AddProjectForm";
+import {useRole} from "../../context/RoleContext";
 
 interface ProjectsTableProps {
     projects: IProject[];
     setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
+    projectManagers: IEmployee[];
+    isModalOpen: boolean;
+    setIsModalOpen: (open: boolean) => void;
 }
 
-const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) => {
+const ProjectsTable: React.FC<ProjectsTableProps> = ({
+                                                         projects,
+                                                         setProjects,
+                                                         projectManagers,
+                                                         isModalOpen,
+                                                         setIsModalOpen
+                                                     }) => {
     const [sortBy, setSortBy] = useState<keyof IProject>('ID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
-    const { selectedRole } = useRole();
-    const [projectManagers, setProjectManagers] = useState<IEmployee[]>([]);
+    const {selectedRole} = useRole();
 
-    useEffect(() => {
-        const fetchPMs = async () => {
-            try {
-                const response = await getEmployees();
-                const filteredManagers = response.data.filter(employee =>
-                    employee.Subdivision === 'Product Management' && employee.Position === 'Project Manager'
-                );
-                setProjectManagers(filteredManagers);
-            } catch (error) {
-                console.error('Error fetching Project Managers:', error);
-            }
-        };
-        fetchPMs();
-    }, []);
+    const handleAddProject = (project: IProject) => {
+        setProjects([...projects, project]);
+    };
 
     const filteredProjects = searchTerm
         ? projects.filter(project => project.ID.toString().includes(searchTerm))
         : projects;
 
-
     const handleSort = (column: keyof IProject) => {
         if (sortBy === column) {
-            // If clicking on the same column, reverse the sort order
             setSortAsc(!sortAsc);
         } else {
-            // If clicking on a different column, set the new column for sorting
             setSortBy(column);
-            setSortAsc(true); // Default to ascending order for the new column
+            setSortAsc(true);
         }
     };
-
 
     const sorted = [...filteredProjects].sort((a, b) => {
         const aValue = a[sortBy];
         const bValue = b[sortBy];
 
         if (typeof aValue === 'string' && typeof bValue === 'string') {
-            if (sortAsc) {
-                return aValue.localeCompare(bValue);
-            } else {
-                return bValue.localeCompare(aValue);
-            }
+            return sortAsc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-            if (sortAsc) {
-                return aValue - bValue;
-            } else {
-                return bValue - aValue;
-            }
+            return sortAsc ? aValue - bValue : bValue - aValue;
         } else {
-            return 0; // if aValue or bValue is undefined
+            return 0;
         }
     });
 
@@ -81,20 +68,19 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
     };
 
     const handleDeleteProject = async (deletedProject: IProject) => {
-        try{
-            const deleteResponse = await deleteProject(deletedProject.ID)
+        try {
+            const deleteResponse = await deleteProject(deletedProject.ID);
             if (deleteResponse.status === 200) {
                 setProjects((prevProjects) =>
                     prevProjects.filter((proj) => proj.ID !== deletedProject.ID)
                 );
-                console.log("Employee deleted:", deletedProject);
             } else {
-                console.error("Failed to delete employee, status:", deleteResponse.status);
+                console.error("Failed to delete project, status:", deleteResponse.status);
             }
-        }catch (error) {
+        } catch (error) {
             console.error("Failed to delete project:", error);
         }
-    }
+    };
 
     const handleEditProject = (project: IProject) => {
         setEditingProject(project);
@@ -108,13 +94,11 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
         };
 
         try {
-            console.log('Updating project with payload:', formattedProject);
             const response = await updateProject(formattedProject);
             if (response.status === 200) {
                 setProjects((prevProjects) =>
                     prevProjects.map((proj) => (proj.ID === updatedProject.ID ? updatedProject : proj))
                 );
-                console.log("Project updated:", response.data);
             } else {
                 console.error("Failed to update project, status:", response.status);
             }
@@ -124,8 +108,6 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
         setEditingProject(null);
     };
 
-
-
     const handleStatusChange = async (project: IProject) => {
         const updatedStatus: 'Active' | 'Inactive' = project.Status === 'Active' ? 'Inactive' : 'Active';
         const updatedProject: IProject = { ...project, Status: updatedStatus };
@@ -133,44 +115,62 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
     };
 
     return (
-        <div>
-            <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by id..." />
-            <table>
-                <thead>
-                <tr>
-                    <SortableHeader column="ID" title="ID" handleSort={handleSort} />
-                    <SortableHeader column="ProjectType" title="ProjectType" handleSort={handleSort} />
-                    <SortableHeader column="StartDate" title="StartDate" handleSort={handleSort} />
-                    <SortableHeader column="EndDate" title="EndDate" handleSort={handleSort} />
-                    <SortableHeader column="ProjectManager" title="ProjectManager" handleSort={handleSort} />
-                    <SortableHeader column="Status" title="Status" handleSort={handleSort} />
-                    <SortableHeader column="Comment" title="Comment" handleSort={handleSort} />
-                </tr>
-                </thead>
-                <tbody>
-                {sorted.map((project, idx) => (
-                    <tr key={idx} onClick={() => setSelectedProject(project)} style={{ cursor: 'pointer' }}>
-                        <td>{project.ID}</td>
-                        <td>{project.ProjectType}</td>
-                        <td>{new Date(project.StartDate).toLocaleDateString()}</td>
-                        <td>{project.EndDate ? new Date(project.EndDate).toLocaleDateString() : undefined}</td>
-                        <td>{project.ProjectManager}</td>
-                        <td>{project.Status}</td>
-                        <td>{project.Comment}</td>
-                        {
-                            selectedRole === 'Project Manager' &&
-                            <td>
-                                <button onClick={(e) => { e.stopPropagation(); handleEditProject(project); }}>Edit</button>
-                                <button onClick={(e) => { e.stopPropagation(); handleStatusChange(project); }}>
-                                    {project.Status === 'Active' ? 'Deactivate' : 'Activate'}
-                                </button>
-                                <button onClick={(e) => { e.stopPropagation(); handleDeleteProject(project); }}>Delete</button>
-                            </td>
-                        }
+        <>
+            <div className="header-container">
+                <div className="table-search">
+                    <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by id..." />
+                </div>
+                {
+                    selectedRole === 'Project Manager' &&
+                    <button className="table-actions" onClick={() => setIsModalOpen(true)}>
+                        <span>+</span> Add
+                    </button>
+                }
+            </div>
+            <div className="table-container">
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <SortableHeader column="ID" title="ID" handleSort={handleSort} />
+                        <SortableHeader column="ProjectType" title="ProjectType" handleSort={handleSort} />
+                        <SortableHeader column="StartDate" title="StartDate" handleSort={handleSort} />
+                        <SortableHeader column="EndDate" title="EndDate" handleSort={handleSort} />
+                        <SortableHeader column="ProjectManager" title="ProjectManager" handleSort={handleSort} />
+                        <SortableHeader column="Status" title="Status" handleSort={handleSort} />
+                        <SortableHeader column="Comment" title="Comment" handleSort={handleSort} />
+                        {selectedRole === 'Project Manager' && <th>Actions</th>}
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {sorted.map((project, idx) => (
+                        <tr key={idx} onClick={() => setSelectedProject(project)} style={{ cursor: 'pointer' }}>
+                            <td>{project.ID}</td>
+                            <td>{project.ProjectType}</td>
+                            <td>{new Date(project.StartDate).toLocaleDateString()}</td>
+                            <td>{project.EndDate ? new Date(project.EndDate).toLocaleDateString() : undefined}</td>
+                            <td>{project.ProjectManager}</td>
+                            <td>{project.Status}</td>
+                            <td>{project.Comment}</td>
+                            {selectedRole === 'Project Manager' &&
+                                <td>
+                                    <button onClick={(e) => { e.stopPropagation(); handleEditProject(project); }}>Edit</button>
+                                    <button onClick={(e) => { e.stopPropagation(); handleStatusChange(project); }}>
+                                        {project.Status === 'Active' ? 'Deactivate' : 'Activate'}
+                                    </button>
+                                    <button onClick={(e) => { e.stopPropagation(); handleDeleteProject(project); }}>Delete</button>
+                                </td>
+                            }
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+            <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <AddProjectForm
+                    onSubmit={handleAddProject}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            </Modal>
             {selectedProject &&
                 <ProjectModal
                     project={selectedProject}
@@ -185,7 +185,7 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
                     onClose={() => setEditingProject(null)}
                 />
             )}
-        </div>
+        </>
     );
 };
 

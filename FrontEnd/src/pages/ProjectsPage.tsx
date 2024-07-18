@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { IProject } from '../models/IProject';
 import ProjectsTable from '../components/Projects/ProjectsTable';
-import Modal from '../common/Modal';
-import AddProjectForm from '../components/Projects/AddProjectForm';
+import {IProject} from "../models/IProject";
+import {IEmployee} from "../models/IEmployee";
 import {getProjects} from "../api/ProjectApi";
-import {useRole} from "../context/RoleContext";
+import {getEmployees} from "../api/EmployeeApi";
 
 const ProjectsPage: React.FC = () => {
     const [projects, setProjects] = useState<IProject[]>([]);
+    const [projectManagers, setProjectManagers] = useState<IEmployee[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const { selectedRole } = useRole();
-
-    const handleAddProject = (project: IProject) => {
-        setProjects([...projects, project]);
-    };
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -33,23 +28,29 @@ const ProjectsPage: React.FC = () => {
         fetchProjects();
     }, []);
 
-    return (
-        <div>
-            <h2>Projects Table</h2>
-            {
-                selectedRole === 'Project Manager' &&
-                <>
-                    <button onClick={() => setIsModalOpen(true)}>Add Project</button>
-                    <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                        <AddProjectForm
-                            onSubmit={handleAddProject}
-                            onClose={() => setIsModalOpen(false)}
-                        />
-                    </Modal>
-                </>
+    useEffect(() => {
+        const fetchPMs = async () => {
+            try {
+                const response = await getEmployees();
+                const filteredManagers = response.data.filter(employee =>
+                    employee.Subdivision === 'Product Management' && employee.Position === 'Project Manager'
+                );
+                setProjectManagers(filteredManagers);
+            } catch (error) {
+                console.error('Error fetching Project Managers:', error);
             }
-            <ProjectsTable projects={projects} setProjects={setProjects}/>
-        </div>
+        };
+        fetchPMs();
+    }, []);
+
+    return (
+        <ProjectsTable
+            projects={projects}
+            setProjects={setProjects}
+            projectManagers={projectManagers}
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+        />
     );
 };
 

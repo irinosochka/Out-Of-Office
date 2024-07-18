@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ILeaveRequest } from '../../models/ILeaveRequest';
 import LeaveRequestModal from './LeaveRequestModal';
 
+import '../../styles/tableStyles.scss';
+
 interface LeaveRequestsTableProps {
     leaveRequests: ILeaveRequest[];
 }
@@ -39,7 +41,7 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }
 
     return (
         <div>
-            <table>
+            <table className="table">
                 <thead>
                 <tr>
                     <SortableHeader column="ID" title="ID" handleSort={handleSort} />

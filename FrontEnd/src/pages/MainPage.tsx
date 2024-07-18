@@ -7,6 +7,8 @@ import ListButton from "../common/ListButton";
 import RoleSelection from "../common/RoleSelection";
 import { useRole } from "../context/RoleContext";
 
+import '../styles/pageStyles.scss'
+
 const MainPage: React.FC = () => {
     const { selectedRole, setSelectedRole } = useRole();
     const [selectedButton, setSelectedButton] = useState<string>('');
@@ -26,11 +28,9 @@ const MainPage: React.FC = () => {
     }, [selectedRole]);
 
     return (
-        <div>
+        <div className="page-container">
             <div>
-                <h1>Role Selection</h1>
                 <RoleSelection onRoleSelect={handleRoleSelect} />
-                <p>Selected Role: {selectedRole}</p>
             </div>
             {selectedRole && selectedRole !== 'Employee' && (
                 <ListButton
