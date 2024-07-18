@@ -7,6 +7,8 @@ import UpdateEmployeeForm from './UpdateEmployeeForm';
 import { checkEmployeeReferences, deleteEmployee, updateEmployee } from '../../api/EmployeeApi';
 
 import '../../styles/tableStyles.scss';
+import {sortArray} from "../../utils/utils";
+import {useSort} from "../../hooks/useSort";
 
 interface EmployeeTableProps {
     employees: IEmployee[];
@@ -14,38 +16,19 @@ interface EmployeeTableProps {
 }
 
 const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees }) => {
-    const [sortBy, setSortBy] = useState<keyof IEmployee>('ID');
-    const [sortAsc, setSortAsc] = useState<boolean>(true);
+    const { sortBy, sortAsc, handleSort } = useSort<IEmployee>('ID');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(null);
     const [editingEmployee, setEditingEmployee] = useState<IEmployee | null>(null);
     const { selectedRole } = useRole();
 
-    const handleSort = (column: keyof IEmployee) => {
-        if (sortBy === column) {
-            setSortAsc(!sortAsc);
-        } else {
-            setSortBy(column);
-            setSortAsc(true);
-        }
-    };
+    const filteredEmployees = searchTerm
+        ? employees.filter(employee =>
+            employee.FullName.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        : employees;
 
-    const filteredEmployees = searchTerm ? employees.filter(employee =>
-        employee.FullName.toLowerCase().includes(searchTerm.toLowerCase())
-    ) : employees;
-
-    const sortedEmployees = [...filteredEmployees].sort((a, b) => {
-        const aValue = a[sortBy];
-        const bValue = b[sortBy];
-
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-            return sortAsc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-        } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-            return sortAsc ? aValue - bValue : bValue - aValue;
-        } else {
-            return 0;
-        }
-    });
+    const sortedEmployees = sortArray(filteredEmployees, sortBy, sortAsc);
 
     const handleCloseModal = () => {
         setSelectedEmployee(null);

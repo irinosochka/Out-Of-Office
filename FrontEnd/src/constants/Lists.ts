@@ -1,5 +1,3 @@
-
-
 export const subdivisions = ['HR', 'Quality Assurance (QA)', 'Engineering', 'Product Management', 'Data Science and Analytics'];
 
 export const positionsBySubdivision: { [key: string]: string[] } = {

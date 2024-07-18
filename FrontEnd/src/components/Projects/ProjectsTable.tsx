@@ -10,6 +10,8 @@ import '../../styles/tableStyles.scss';
 import Modal from "../../common/Modal";
 import AddProjectForm from "./AddProjectForm";
 import {useRole} from "../../context/RoleContext";
+import {sortArray} from "../../utils/utils";
+import {useSort} from "../../hooks/useSort";
 
 interface ProjectsTableProps {
     projects: IProject[];
@@ -26,42 +28,21 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                                                          isModalOpen,
                                                          setIsModalOpen
                                                      }) => {
-    const [sortBy, setSortBy] = useState<keyof IProject>('ID');
-    const [sortAsc, setSortAsc] = useState<boolean>(true);
+    const { sortBy, sortAsc, handleSort } = useSort<IProject>('ID');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
     const {selectedRole} = useRole();
 
-    const handleAddProject = (project: IProject) => {
-        setProjects([...projects, project]);
-    };
-
     const filteredProjects = searchTerm
         ? projects.filter(project => project.ID.toString().includes(searchTerm))
         : projects;
 
-    const handleSort = (column: keyof IProject) => {
-        if (sortBy === column) {
-            setSortAsc(!sortAsc);
-        } else {
-            setSortBy(column);
-            setSortAsc(true);
-        }
+    const sorted = sortArray(filteredProjects, sortBy, sortAsc);
+
+    const handleAddProject = (project: IProject) => {
+        setProjects([...projects, project]);
     };
-
-    const sorted = [...filteredProjects].sort((a, b) => {
-        const aValue = a[sortBy];
-        const bValue = b[sortBy];
-
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-            return sortAsc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-        } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-            return sortAsc ? aValue - bValue : bValue - aValue;
-        } else {
-            return 0;
-        }
-    });
 
     const handleCloseModal = () => {
         setSelectedProject(null);

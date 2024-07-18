@@ -1,48 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {IApprovalRequest} from "../../models/IApprovalRequest";
 
 import '../../styles/tableStyles.scss';
+import {sortArray} from "../../utils/utils";
+import {useSort} from "../../hooks/useSort";
 
 interface ApprovalRequestsTableProps {
     approvalRequests: IApprovalRequest[];
 }
 
 const ApprovalRequestsTable: React.FC<ApprovalRequestsTableProps> = ({ approvalRequests }) => {
-    const [sortBy, setSortBy] = useState<keyof IApprovalRequest>('ID');
-    const [sortAsc, setSortAsc] = useState<boolean>(true);
+    const { sortBy, sortAsc, handleSort } = useSort<IApprovalRequest>('ID');
 
-    const handleSort = (column: keyof IApprovalRequest) => {
-        if (sortBy === column) {
-            // If clicking on the same column, reverse the sort order
-            setSortAsc(!sortAsc);
-        } else {
-            // If clicking on a different column, set the new column for sorting
-            setSortBy(column);
-            setSortAsc(true); // Default to ascending order for the new column
-        }
-    };
-
-
-    const sorted = [...approvalRequests].sort((a, b) => {
-        const aValue = a[sortBy];
-        const bValue = b[sortBy];
-
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-            if (sortAsc) {
-                return aValue.localeCompare(bValue);
-            } else {
-                return bValue.localeCompare(aValue);
-            }
-        } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-            if (sortAsc) {
-                return aValue - bValue;
-            } else {
-                return bValue - aValue;
-            }
-        } else {
-            return 0; // if aValue or bValue is undefined
-        }
-    });
+    const sorted = sortArray(approvalRequests, sortBy, sortAsc);
 
     return (
         <div>

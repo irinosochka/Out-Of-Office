@@ -22,6 +22,8 @@ const MainPage: React.FC = () => {
             setSelectedButton('LeaveRequest');
         } else if(selectedRole === ''){
             setSelectedButton('');
+        } else if(selectedRole === 'Project Manager') {
+            setSelectedButton('Project');
         } else {
             setSelectedButton('Employees');
         }

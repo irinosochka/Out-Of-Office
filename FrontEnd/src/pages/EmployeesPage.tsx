@@ -31,7 +31,6 @@ const EmployeesPage: React.FC = () => {
 
     return (
         <div>
-            <h2>Employee Table</h2>
             {selectedRole === 'HR Manager' &&
                 <>
                     <button onClick={() => setIsModalOpen(true)}>Add Employee</button>

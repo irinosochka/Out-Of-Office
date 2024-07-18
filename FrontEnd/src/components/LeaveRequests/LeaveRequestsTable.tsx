@@ -3,41 +3,22 @@ import { ILeaveRequest } from '../../models/ILeaveRequest';
 import LeaveRequestModal from './LeaveRequestModal';
 
 import '../../styles/tableStyles.scss';
+import {sortArray} from "../../utils/utils";
+import {useSort} from "../../hooks/useSort";
 
 interface LeaveRequestsTableProps {
     leaveRequests: ILeaveRequest[];
 }
 
 const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({ leaveRequests }) => {
-    const [sortBy, setSortBy] = useState<keyof ILeaveRequest>('ID');
-    const [sortAsc, setSortAsc] = useState<boolean>(true);
+    const { sortBy, sortAsc, handleSort } = useSort<ILeaveRequest>('ID');
     const [selectedLeaveRequest, setSelectedLeaveRequest] = useState<ILeaveRequest | null>(null);
 
-    const handleSort = (column: keyof ILeaveRequest) => {
-        if (sortBy === column) {
-            setSortAsc(!sortAsc);
-        } else {
-            setSortBy(column);
-            setSortAsc(true);
-        }
-    };
+    const sorted = sortArray(leaveRequests, sortBy, sortAsc);
 
     const handleRowClick = (leaveRequest: ILeaveRequest) => {
         setSelectedLeaveRequest(leaveRequest);
     };
-
-    const sorted = [...leaveRequests].sort((a, b) => {
-        const aValue = a[sortBy];
-        const bValue = b[sortBy];
-
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-            return sortAsc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-        } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-            return sortAsc ? aValue - bValue : bValue - aValue;
-        } else {
-            return 0; // if aValue or bValue is undefined
-        }
-    });
 
     return (
         <div>
