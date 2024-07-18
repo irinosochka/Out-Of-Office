@@ -9,3 +9,6 @@ export const positionsBySubdivision: { [key: string]: string[] } = {
     'Product Management': ['Product Owner', 'Project Manager', 'Scrum Master'],
     'Data Science and Analytics': ['Data Scientist', 'Data Analyst', 'Machine Learning Engineer', 'Big Data Engineer']
 };
+
+export const projectTypes = ['Standard building projects', 'Non-standard building projects', 'Standard civil engineering projects',
+                            'Non-standard civil engineering projects', 'Development and equipment projects', 'Outsourcing projects' ]

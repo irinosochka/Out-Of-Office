@@ -26,7 +26,8 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
             try {
                 const response = await getEmployees();
                 const filteredManagers = response.data.filter(employee =>
-                    employee.Subdivision === 'HR' && employee.Position === 'HR Manager'
+                    employee.Subdivision === 'HR' && employee.Position === 'HR Manager' &&
+                    employee.Status === 'Active'
                 );
                 setHrManagers(filteredManagers);
             } catch (error) {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { IProject } from '../models/IProjects';
 import ProjectsTable from '../components/Projects/ProjectsTable';
 import Modal from '../common/Modal';
 import AddProjectForm from '../components/Projects/AddProjectForm';
+import {getProjects} from "../api/ProjectApi";
 
 const ProjectsPage: React.FC = () => {
     const [projects, setProjects] = useState<IProject[]>([]);
@@ -16,7 +16,7 @@ const ProjectsPage: React.FC = () => {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get<IProject[]>('http://localhost:8082/Lists/Projects');
+                const response = await getProjects();
                 const projectsWithDates = response.data.map(project => ({
                     ...project,
                     StartDate: new Date(project.StartDate),
