@@ -70,7 +70,13 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
         setEditingEmployee(null);
     };
 
-    const handleDeactivateEmployee = async (deletedEmployee: IEmployee) => {
+    const handleStatusChange = async (employee: IEmployee) => {
+        const updatedStatus: 'Active' | 'Inactive' = employee.Status === 'Active' ? 'Inactive' : 'Active';
+        const updatedEmployee: IEmployee = { ...employee, Status: updatedStatus };
+        await handleUpdateEmployee(updatedEmployee);
+    };
+
+    const handleDeleteEmployee = async (deletedEmployee: IEmployee) => {
         try {
             const checkReferencesResponse = await checkEmployeeReferences(deletedEmployee.ID);
             if (checkReferencesResponse.data.referenced) {
@@ -123,7 +129,10 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({ employees, setEmployees 
                         {selectedRole === "HR Manager" && (
                             <td>
                                 <button onClick={(e) => { e.stopPropagation(); handleEditEmployee(employee); }}>Edit</button>
-                                <button onClick={(e) => { e.stopPropagation(); handleDeactivateEmployee(employee); }}>Deactivate</button>
+                                <button onClick={(e) => { e.stopPropagation(); handleStatusChange(employee); }}>
+                                    {employee.Status === 'Active' ? 'Deactivate' : 'Activate'}
+                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); handleDeleteEmployee(employee); }}>Delete with all requests</button>
                             </td>
                         )}
                     </tr>

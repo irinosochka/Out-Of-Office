@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { IEmployee } from '../../models/IEmployee';
+import {updateEmployee} from "../../api/EmployeeApi";
 
 interface UpdateEmployeeFormProps {
     employee: IEmployee;
@@ -26,7 +26,7 @@ const UpdateEmployeeForm: React.FC<UpdateEmployeeFormProps> = ({ employee, onSub
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.put<IEmployee>(`http://localhost:8082/Lists/Employees/${formState.ID}`, formState);
+            const response = await updateEmployee(formState);
             onSubmit(response.data);
         } catch (error) {
             console.error('Error updating data:', error);
