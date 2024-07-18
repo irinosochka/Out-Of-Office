@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {IProject} from "../../models/IProject";
 import {deleteProject, updateProject} from "../../api/ProjectApi";
 import {useRole} from "../../context/RoleContext";
 import moment from "moment";
 import UpdateProjectForm from "./UpdateProjectForm";
 import ProjectModal from "./ProjectModal";
+import {IEmployee} from "../../models/IEmployee";
+import {getEmployees} from "../../api/EmployeeApi";
 
 interface ProjectsTableProps {
     projects: IProject[];
@@ -17,6 +19,22 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
     const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
     const { selectedRole } = useRole();
+    const [projectManagers, setProjectManagers] = useState<IEmployee[]>([]);
+
+    useEffect(() => {
+        const fetchPMs = async () => {
+            try {
+                const response = await getEmployees();
+                const filteredManagers = response.data.filter(employee =>
+                    employee.Subdivision === 'Product Management' && employee.Position === 'Project Manager'
+                );
+                setProjectManagers(filteredManagers);
+            } catch (error) {
+                console.error('Error fetching Project Managers:', error);
+            }
+        };
+        fetchPMs();
+    }, []);
 
     const handleSort = (column: keyof IProject) => {
         if (sortBy === column) {
@@ -149,6 +167,7 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
                 <ProjectModal
                     project={selectedProject}
                     onClose={handleCloseModal}
+                    projectManagers={projectManagers}
                 />
             }
             {editingProject && (
