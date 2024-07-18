@@ -7,6 +7,7 @@ import UpdateProjectForm from "./UpdateProjectForm";
 import ProjectModal from "./ProjectModal";
 import {IEmployee} from "../../models/IEmployee";
 import {getEmployees} from "../../api/EmployeeApi";
+import Search from "../../common/Search";
 
 interface ProjectsTableProps {
     projects: IProject[];
@@ -16,6 +17,7 @@ interface ProjectsTableProps {
 const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) => {
     const [sortBy, setSortBy] = useState<keyof IProject>('ID');
     const [sortAsc, setSortAsc] = useState<boolean>(true);
+    const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
     const { selectedRole } = useRole();
@@ -36,6 +38,11 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
         fetchPMs();
     }, []);
 
+    const filteredProjects = searchTerm
+        ? projects.filter(project => project.ID.toString().includes(searchTerm))
+        : projects;
+
+
     const handleSort = (column: keyof IProject) => {
         if (sortBy === column) {
             // If clicking on the same column, reverse the sort order
@@ -48,7 +55,7 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
     };
 
 
-    const sorted = [...projects].sort((a, b) => {
+    const sorted = [...filteredProjects].sort((a, b) => {
         const aValue = a[sortBy];
         const bValue = b[sortBy];
 
@@ -127,6 +134,7 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({ projects , setProjects}) 
 
     return (
         <div>
+            <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by id..." />
             <table>
                 <thead>
                 <tr>
