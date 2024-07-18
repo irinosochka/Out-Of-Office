@@ -23,7 +23,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
     const [pM, setPM] = useState<IEmployee[]>([]);
 
     useEffect(() => {
-        const fetchPM = async () => {
+        const fetchPMs = async () => {
             try {
                 const response = await getEmployees();
                 const filteredPM = response.data.filter(employee =>
@@ -35,7 +35,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
                 console.error('Error fetching Project Managers:', error);
             }
         };
-        fetchPM();
+        fetchPMs();
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

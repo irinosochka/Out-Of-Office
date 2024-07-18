@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import moment from "moment";
-import {ILeaveRequest} from "../../models/ILeaveRequest";
+import { ILeaveRequest } from "../../models/ILeaveRequest";
+import { IEmployee } from "../../models/IEmployee";
+import { getEmployees } from "../../api/EmployeeApi";
+import { addLeaveRequest } from "../../api/LeaveRequestApi";
 
 interface AddLeaveRequestFormProps {
     onSubmit: (leaveRequest: ILeaveRequest) => void;
@@ -17,68 +19,128 @@ const AddLeaveRequestForm: React.FC<AddLeaveRequestFormProps> = ({ onSubmit, onC
         Comment: '',
         Status: 'New'
     });
+    const [employees, setEmployees] = useState<IEmployee[]>([]);
+
+    useEffect(() => {
+        const fetchEmployees = async () => {
+            try {
+                const response = await getEmployees();
+                setEmployees(response.data);
+            } catch (error) {
+                console.error('Error fetching employees:', error);
+            }
+        };
+        fetchEmployees();
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        if(name === 'StartDate' || name === 'EndDate'){
+        if (name === 'StartDate' || name === 'EndDate') {
             setFormState({
                 ...formState,
                 [name]: new Date(value)
             });
+        } else if (name === 'EmployeeID') {
+            setFormState({
+                ...formState,
+                EmployeeID: Number(value)
+            });
+        } else {
+            setFormState({
+                ...formState,
+                [name]: value
+            });
         }
-        setFormState({
-            ...formState,
-            [name]: value
-        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            const startDate = moment(formState.StartDate).startOf('day');
+            const endDate = formState.EndDate ? moment(formState.EndDate).startOf('day') : null;
+
+            if (endDate && startDate.isAfter(endDate)) {
+                alert('End Date cannot be earlier than Start Date');
+                return;
+            }
+
             const formattedFormState = {
                 ...formState,
                 StartDate: moment(formState.StartDate).format('YYYY-MM-DD'),
                 EndDate: moment(formState.EndDate).format('YYYY-MM-DD')
             };
-            const response = await axios.post<ILeaveRequest>('http://localhost:8082/Lists/LeaveRequests', formattedFormState);
+            const response = await addLeaveRequest(formattedFormState);
             onSubmit(response.data);
-            console.log(response.data); // Check the structure and contents
         } catch (error) {
             console.error('Error adding data:', error);
         }
-        console.log(new Date(formState.StartDate))
         onClose();
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <label>Employee ID</label>
-                <input type="number" name="EmployeeID" value={formState.EmployeeID} onChange={handleChange} required />
+                <label>Employee</label>
+                <select
+                    name="EmployeeID"
+                    value={formState.EmployeeID.toString()}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Select Employee</option>
+                    {employees.map(emp => (
+                        <option key={emp.ID} value={emp.ID}>
+                            {emp.ID} - {emp.FullName}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div>
                 <label>Absence Reason</label>
-                <input name="AbsenceReason" value={formState.AbsenceReason} onChange={handleChange} required />
+                <input
+                    name="AbsenceReason"
+                    value={formState.AbsenceReason}
+                    onChange={handleChange}
+                    required
+                />
             </div>
             <div>
                 <label>Start Date</label>
-                <input type="date" name="StartDate"
-                       value={moment(formState.StartDate).format('YYYY-MM-DD')}
-                       onChange={handleChange} required />
+                <input
+                    type="date"
+                    name="StartDate"
+                    value={moment(formState.StartDate).format('YYYY-MM-DD')}
+                    onChange={handleChange}
+                    required
+                />
             </div>
             <div>
-                <label>EndDate</label>
-                <input type="date" name="EndDate"
-                       value={moment(formState.EndDate).format('YYYY-MM-DD')}
-                       onChange={handleChange} required/>
+                <label>End Date</label>
+                <input
+                    type="date"
+                    name="EndDate"
+                    value={moment(formState.EndDate).format('YYYY-MM-DD')}
+                    onChange={handleChange}
+                    required
+                />
             </div>
             <div>
                 <label>Comment</label>
-                <input name="Comment" value={formState.Comment} onChange={handleChange}/>
+                <input
+                    name="Comment"
+                    value={formState.Comment}
+                    onChange={handleChange}
+                />
             </div>
             <div>
                 <label>Status</label>
-                <select name="Status" value={formState.Status} onChange={handleChange} required disabled>
+                <select
+                    name="Status"
+                    value={formState.Status}
+                    onChange={handleChange}
+                    required
+                    disabled
+                >
                     <option value="New">New</option>
                 </select>
             </div>

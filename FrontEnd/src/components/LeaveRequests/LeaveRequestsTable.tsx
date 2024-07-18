@@ -60,6 +60,7 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                         <SortableHeader column="EndDate" title="End Date" handleSort={handleSort} />
                         <SortableHeader column="Status" title="Status" handleSort={handleSort} />
                         <SortableHeader column="Comment" title="Comment" handleSort={handleSort} />
+                        {isEmp && <th>Actions</th>}
                     </tr>
                     </thead>
                     <tbody>
