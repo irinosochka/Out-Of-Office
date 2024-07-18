@@ -7,6 +7,7 @@ import LeaveRequestModal from "../components/LeaveRequests/LeaveRequestModal";
 import {useRole} from "../context/RoleContext";
 import moment from "moment";
 import {deleteLeaveRequest, getLeaveRequests, updateLeaveRequest} from "../api/LeaveRequestApi";
+import UpdateLeaveRequestForm from "../components/LeaveRequests/UpdateLeaveRequestForm";
 
 const LeaveRequestsPage: React.FC = () => {
     const [leaveRequests, setLeaveRequests] = useState<ILeaveRequest[]>([]);
@@ -19,7 +20,7 @@ const LeaveRequestsPage: React.FC = () => {
     const isEmp = () => selectedRole === 'Employee';
 
     useEffect(() => {
-        const fetchEmployees = async () => {
+        const fetchLeaveRequests = async () => {
             try {
                 const response = await getLeaveRequests();
                 setLeaveRequests(response.data);
@@ -28,7 +29,7 @@ const LeaveRequestsPage: React.FC = () => {
             }
         };
 
-        fetchEmployees();
+        fetchLeaveRequests();
     }, []);
 
     const handleCloseModal = () => {
@@ -39,19 +40,22 @@ const LeaveRequestsPage: React.FC = () => {
         setLeaveRequests([...leaveRequests, request]);
     };
 
-
     const handleDeleteLeaveRequest = async (deletedRequest: ILeaveRequest) => {
-        try {
-            const deleteResponse = await deleteLeaveRequest(deletedRequest.ID);
-            if (deleteResponse.status === 200) {
-                setLeaveRequests((prevRequests) =>
-                    prevRequests.filter((req) => req.ID !== deletedRequest.ID)
-                );
-            } else {
-                console.error("Failed to delete leave request, status:", deleteResponse.status);
+        if(deletedRequest.Status != 'Approved') {
+            try {
+                const deleteResponse = await deleteLeaveRequest(deletedRequest.ID);
+                if (deleteResponse.status === 200) {
+                    setLeaveRequests((prevRequests) =>
+                        prevRequests.filter((req) => req.ID !== deletedRequest.ID)
+                    );
+                } else {
+                    console.error("Failed to delete leave request, status:", deleteResponse.status);
+                }
+            } catch (error) {
+                console.error("Failed to delete leave request:", error);
             }
-        } catch (error) {
-            console.error("Failed to delete leave request:", error);
+        }else {
+            alert('You cannot delete approved request.')
         }
     };
 
@@ -109,6 +113,13 @@ const LeaveRequestsPage: React.FC = () => {
                 onClose={() => handleCloseModal()}
                 leaveRequest={selectedLeaveRequest}
             />
+            {editingLeaveRequest && (
+                <UpdateLeaveRequestForm
+                    leaveRequest={editingLeaveRequest}
+                    onSubmit={handleEditLeaveRequest}
+                    onClose={() => setEditingLeaveRequest(null)}
+                />
+            )}
         </>
     );
 };
