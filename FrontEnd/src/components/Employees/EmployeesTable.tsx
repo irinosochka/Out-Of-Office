@@ -8,7 +8,7 @@ import { useSort } from '../../hooks/useSort';
 interface EmployeeTableProps {
     employees: IEmployee[];
     isHR: boolean;
-    setIsModalOpen: (open: boolean) => void;
+    setShowAddingForm: (open: boolean) => void;
     setSelectedEmployee: (employee: IEmployee) => void;
     handleEditEmployee: (employee: IEmployee) => void;
     handleStatusChange: (employee: IEmployee) => void;
@@ -18,7 +18,7 @@ interface EmployeeTableProps {
 const EmployeesTable: React.FC<EmployeeTableProps> = ({
                                                           employees,
                                                           isHR,
-                                                          setIsModalOpen,
+                                                          setShowAddingForm,
                                                           setSelectedEmployee,
                                                           handleEditEmployee,
                                                           handleDeleteEmployee,
@@ -43,7 +43,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
                 </div>
                 {
                     isHR &&
-                    <button className="btn-add" onClick={() => setIsModalOpen(true)}>
+                    <button className="btn-add" onClick={() => setShowAddingForm(true)}>
                         <span>+</span> Add
                     </button>
                 }

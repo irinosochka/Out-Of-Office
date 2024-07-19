@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import moment from "moment";
+import moment from 'moment';
 import { ILeaveRequest } from "../../models/ILeaveRequest";
 import { IEmployee } from "../../models/IEmployee";
 import { getEmployees } from "../../api/EmployeeApi";
@@ -78,74 +78,80 @@ const AddLeaveRequestForm: React.FC<AddLeaveRequestFormProps> = ({ onSubmit, onC
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Employee</label>
-                <select
-                    name="EmployeeID"
-                    value={formState.EmployeeID.toString()}
-                    onChange={handleChange}
-                    required
-                >
-                    <option value="">Select Employee</option>
-                    {employees.map(emp => (
-                        <option key={emp.ID} value={emp.ID}>
-                            {emp.ID} - {emp.FullName}
-                        </option>
-                    ))}
-                </select>
+        <div className="modal">
+            <div className="modal-content">
+                <span className="close" onClick={onClose}>&times;</span>
+                <h2>Add Leave Request</h2>
+                <form className="modal-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Employee</label>
+                        <select
+                            name="EmployeeID"
+                            value={formState.EmployeeID.toString()}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Select Employee</option>
+                            {employees.map(emp => (
+                                <option key={emp.ID} value={emp.ID}>
+                                    {emp.ID} - {emp.FullName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Absence Reason</label>
+                        <input
+                            name="AbsenceReason"
+                            value={formState.AbsenceReason}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Start Date</label>
+                        <input
+                            type="date"
+                            name="StartDate"
+                            value={moment(formState.StartDate).format('YYYY-MM-DD')}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>End Date</label>
+                        <input
+                            type="date"
+                            name="EndDate"
+                            value={moment(formState.EndDate).format('YYYY-MM-DD')}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Comment</label>
+                        <input
+                            name="Comment"
+                            value={formState.Comment}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Status</label>
+                        <select
+                            name="Status"
+                            value={formState.Status}
+                            onChange={handleChange}
+                            required
+                            disabled
+                        >
+                            <option value="New">New</option>
+                        </select>
+                    </div>
+                    <button type="submit">Add Request</button>
+                </form>
             </div>
-            <div>
-                <label>Absence Reason</label>
-                <input
-                    name="AbsenceReason"
-                    value={formState.AbsenceReason}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Start Date</label>
-                <input
-                    type="date"
-                    name="StartDate"
-                    value={moment(formState.StartDate).format('YYYY-MM-DD')}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>End Date</label>
-                <input
-                    type="date"
-                    name="EndDate"
-                    value={moment(formState.EndDate).format('YYYY-MM-DD')}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Comment</label>
-                <input
-                    name="Comment"
-                    value={formState.Comment}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label>Status</label>
-                <select
-                    name="Status"
-                    value={formState.Status}
-                    onChange={handleChange}
-                    required
-                    disabled
-                >
-                    <option value="New">New</option>
-                </select>
-            </div>
-            <button type="submit">Add Request</button>
-        </form>
+        </div>
     );
 };
 

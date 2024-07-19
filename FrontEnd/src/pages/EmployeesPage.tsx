@@ -4,15 +4,14 @@ import EmployeesTable from '../components/Employees/EmployeesTable';
 import { checkEmployeeReferences, deleteEmployee, getEmployees, updateEmployee } from '../api/EmployeeApi';
 import { useRole } from '../context/RoleContext';
 import AddEmployeeForm from '../components/Employees/AddEmployeeForm';
-import Modal from '../common/Modal';
 import EmployeeModal from '../components/Employees/EmployeeModal';
 import UpdateEmployeeForm from '../components/Employees/UpdateEmployeeForm';
 
 const EmployeesPage: React.FC = () => {
     const [employees, setEmployees] = useState<IEmployee[]>([]);
+    const [showAddingForm, setShowAddingForm] = useState<boolean>(false);
     const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(null);
     const [editingEmployee, setEditingEmployee] = useState<IEmployee | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const { selectedRole } = useRole();
 
     const isHR = () => selectedRole === 'HR Manager';
@@ -34,8 +33,8 @@ const EmployeesPage: React.FC = () => {
         setEmployees([...employees, employee]);
     };
 
-    const handleCloseModal = () => {
-        setSelectedEmployee(null);
+    const handleCloseAdding = () => {
+        setShowAddingForm(false);
     };
 
     const handleEditEmployee = (employee: IEmployee) => {
@@ -92,20 +91,23 @@ const EmployeesPage: React.FC = () => {
             <EmployeesTable
                 employees={employees}
                 isHR={isHR()}
-                setIsModalOpen={setIsModalOpen}
+                setShowAddingForm={setShowAddingForm}
                 setSelectedEmployee={setSelectedEmployee}
                 handleEditEmployee={handleEditEmployee}
                 handleStatusChange={handleStatusChange}
                 handleDeleteEmployee={handleDeleteEmployee}
             />
-            <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            {showAddingForm && (
                 <AddEmployeeForm
                     onSubmit={handleAddEmployee}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => handleCloseAdding()}
                 />
-            </Modal>
+            )}
             {selectedEmployee && (
-                <EmployeeModal employee={selectedEmployee} onClose={handleCloseModal} />
+                <EmployeeModal
+                    employee={selectedEmployee}
+                    onClose={() =>  setSelectedEmployee(null)}
+                />
             )}
             {editingEmployee && (
                 <UpdateEmployeeForm

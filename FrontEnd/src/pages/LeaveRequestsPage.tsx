@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {ILeaveRequest} from "../models/ILeaveRequest";
 import LeaveRequestsTable from "../components/LeaveRequests/LeaveRequestsTable";
-import Modal from "../common/Modal";
 import AddLeaveRequestForm from "../components/LeaveRequests/AddLeaveRequestForm";
 import LeaveRequestModal from "../components/LeaveRequests/LeaveRequestModal";
 import {useRole} from "../context/RoleContext";
@@ -11,7 +10,7 @@ import UpdateLeaveRequestForm from "../components/LeaveRequests/UpdateLeaveReque
 
 const LeaveRequestsPage: React.FC = () => {
     const [leaveRequests, setLeaveRequests] = useState<ILeaveRequest[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [showAddingForm, setShowAddingForm] = useState<boolean>(false);
     const [editingLeaveRequest, setEditingLeaveRequest] = useState<ILeaveRequest | null>(null);
     const [selectedLeaveRequest, setSelectedLeaveRequest] = useState<ILeaveRequest | null>(null);
 
@@ -32,8 +31,8 @@ const LeaveRequestsPage: React.FC = () => {
         fetchLeaveRequests();
     }, []);
 
-    const handleCloseModal = () => {
-        setSelectedLeaveRequest(null);
+    const handleCloseAdding = () => {
+        setShowAddingForm(false);
     };
 
     const handleAddLeaveRequest = (request: ILeaveRequest) => {
@@ -96,23 +95,24 @@ const LeaveRequestsPage: React.FC = () => {
             <LeaveRequestsTable
                 leaveRequests={leaveRequests}
                 isEmp={isEmp()}
-                setIsModalOpen={setIsModalOpen}
+                setShowAddingForm={setShowAddingForm}
                 setSelectedRequest={setSelectedLeaveRequest}
                 handleEditRequest={handleEditLeaveRequest}
                 handleStatusChange={handleStatusChange}
                 handleDeleteRequest={handleDeleteLeaveRequest}
             />
-            <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            {showAddingForm && (
                 <AddLeaveRequestForm
                     onSubmit={handleAddLeaveRequest}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => handleCloseAdding()}
                 />
-            </Modal>
-            <LeaveRequestModal
-                isOpen={selectedLeaveRequest !== null}
-                onClose={() => handleCloseModal()}
-                leaveRequest={selectedLeaveRequest}
-            />
+            )}
+            {selectedLeaveRequest && (
+                <LeaveRequestModal
+                    onClose={() => setSelectedLeaveRequest(null)}
+                    leaveRequest={selectedLeaveRequest}
+                />
+            )}
             {editingLeaveRequest && (
                 <UpdateLeaveRequestForm
                     leaveRequest={editingLeaveRequest}

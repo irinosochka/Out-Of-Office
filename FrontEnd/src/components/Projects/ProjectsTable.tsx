@@ -8,7 +8,7 @@ import {useSort} from "../../hooks/useSort";
 interface ProjectsTableProps {
     projects: IProject[];
     isPm: boolean;
-    setIsModalOpen: (open: boolean) => void;
+    setShowAddingForm: (open: boolean) => void;
     setSelectedProject: (project: IProject) => void;
     handleEditProject: (project: IProject) => void;
     handleStatusChange: (project: IProject) => void;
@@ -19,7 +19,7 @@ interface ProjectsTableProps {
 const ProjectsTable: React.FC<ProjectsTableProps> = ({
                                                          projects,
                                                          isPm,
-                                                         setIsModalOpen,
+                                                         setShowAddingForm,
                                                          setSelectedProject,
                                                          handleEditProject,
                                                          handleDeleteProject,
@@ -42,7 +42,7 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                 </div>
                 {
                     isPm &&
-                    <button className="btn-add" onClick={() => setIsModalOpen(true)}>
+                    <button className="btn-add" onClick={() => setShowAddingForm(true)}>
                         <span>+</span> Add
                     </button>
                 }

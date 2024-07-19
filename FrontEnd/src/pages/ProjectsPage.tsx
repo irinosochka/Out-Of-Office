@@ -6,7 +6,6 @@ import {deleteProject, getProjects, updateProject} from "../api/ProjectApi";
 import {getEmployees} from "../api/EmployeeApi";
 import {useRole} from "../context/RoleContext";
 import moment from "moment";
-import Modal from "../common/Modal";
 import AddProjectForm from "../components/Projects/AddProjectForm";
 import ProjectModal from "../components/Projects/ProjectModal";
 import UpdateProjectForm from "../components/Projects/UpdateProjectForm";
@@ -14,9 +13,9 @@ import UpdateProjectForm from "../components/Projects/UpdateProjectForm";
 const ProjectsPage: React.FC = () => {
     const [projects, setProjects] = useState<IProject[]>([]);
     const [projectManagers, setProjectManagers] = useState<IEmployee[]>([]);
+    const [showAddingForm, setShowAddingForm] = useState<boolean>(false);
     const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const {selectedRole} = useRole();
 
     const isPM = () => selectedRole === 'Project Manager';
@@ -58,8 +57,8 @@ const ProjectsPage: React.FC = () => {
         setProjects([...projects, project]);
     };
 
-    const handleCloseModal = () => {
-        setSelectedProject(null);
+    const handleCloseAdding = () => {
+        setShowAddingForm(false);
     };
 
     const handleDeleteProject = async (deletedProject: IProject) => {
@@ -114,22 +113,22 @@ const ProjectsPage: React.FC = () => {
             <ProjectsTable
                 projects={projects}
                 isPm={isPM()}
-                setIsModalOpen={setIsModalOpen}
+                setShowAddingForm={setShowAddingForm}
                 setSelectedProject={setSelectedProject}
                 handleEditProject={handleEditProject}
                 handleStatusChange={handleStatusChange}
                 handleDeleteProject={handleDeleteProject}
             />
-            <Modal show={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            {showAddingForm && (
                 <AddProjectForm
                     onSubmit={handleAddProject}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => handleCloseAdding()}
                 />
-            </Modal>
+            )}
             {selectedProject &&
                 <ProjectModal
                     project={selectedProject}
-                    onClose={handleCloseModal}
+                    onClose={() => setSelectedProject(null)}
                     projectManagers={projectManagers}
                 />
             }

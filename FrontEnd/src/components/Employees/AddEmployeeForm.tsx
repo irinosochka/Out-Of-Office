@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IEmployee } from "../../models/IEmployee";
 import { subdivisions, positionsBySubdivision } from "../../constants/Lists";
-import {addEmployee, getEmployees} from "../../api/EmployeeApi";
-
+import { addEmployee, getEmployees } from "../../api/EmployeeApi";
 
 interface AddEmployeeFormProps {
     onSubmit: (employee: IEmployee) => void;
@@ -42,7 +41,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
         const { name, value } = e.target;
         setFormState({
             ...formState,
-            [name]: value
+            [name]: name === 'OutOfOfficeBalance' ? Number(value) : value
         });
     };
 
@@ -57,8 +56,8 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if(formState.OutOfOfficeBalance < 0){
-            alert('Out-Of-Office Balance cannot be less then 0')
+        if (formState.OutOfOfficeBalance < 0) {
+            alert('Out-Of-Office Balance cannot be less than 0');
         } else {
             try {
                 const response = await addEmployee({
@@ -74,57 +73,94 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Full Name</label>
-                <input name="FullName" value={formState.FullName} onChange={handleChange} required />
+        <div className="modal">
+            <div className="modal-content">
+                <span className="close" onClick={onClose}>&times;</span>
+                <h2>Add Employee</h2>
+                <form className="modal-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Full Name</label>
+                        <input
+                            name="FullName"
+                            value={formState.FullName}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Subdivision</label>
+                        <select
+                            name="Subdivision"
+                            value={formState.Subdivision}
+                            onChange={handleSubdivisionChange}
+                            required
+                        >
+                            <option value="">Select Subdivision</option>
+                            {subdivisions.map(subdivision => (
+                                <option key={subdivision} value={subdivision}>
+                                    {subdivision}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Position</label>
+                        <select
+                            name="Position"
+                            value={formState.Position}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Select Position</option>
+                            {formState.Subdivision && positionsBySubdivision[formState.Subdivision].map(position => (
+                                <option key={position} value={position}>
+                                    {position}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Status</label>
+                        <select
+                            name="Status"
+                            value={formState.Status}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>People Partner</label>
+                        <select
+                            name="PeoplePartner"
+                            value={formState.PeoplePartner.toString()}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Select People Partner</option>
+                            {hrManagers.map(manager => (
+                                <option key={manager.ID} value={manager.ID.toString()}>
+                                    {manager.ID} - {manager.FullName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Out-Of-Office Balance</label>
+                        <input
+                            type="number"
+                            name="OutOfOfficeBalance"
+                            value={formState.OutOfOfficeBalance}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <button type="submit">Add Employee</button>
+                </form>
             </div>
-            <div>
-                <label>Subdivision</label>
-                <select name="Subdivision" value={formState.Subdivision} onChange={handleSubdivisionChange} required>
-                    <option value="">Select Subdivision</option>
-                    {subdivisions.map(subdivision => (
-                        <option key={subdivision} value={subdivision}>
-                            {subdivision}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label>Position</label>
-                <select name="Position" value={formState.Position} onChange={handleChange} required>
-                    <option value="">Select Position</option>
-                    {formState.Subdivision && positionsBySubdivision[formState.Subdivision].map(position => (
-                        <option key={position} value={position}>
-                            {position}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label>Status</label>
-                <select name="Status" value={formState.Status} onChange={handleChange} required>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                </select>
-            </div>
-            <div>
-                <label>People Partner</label>
-                <select name="PeoplePartner" value={formState.PeoplePartner.toString()} onChange={handleChange} required>
-                    <option value="">Select People Partner</option>
-                    {hrManagers.map(manager => (
-                        <option key={manager.ID} value={manager.ID.toString()}>
-                            {manager.ID} - {manager.FullName}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label>Out-Of-Office Balance</label>
-                <input type="number" name="OutOfOfficeBalance" value={formState.OutOfOfficeBalance} onChange={handleChange} required />
-            </div>
-            <button type="submit">Add Employee</button>
-        </form>
+        </div>
     );
 };
 

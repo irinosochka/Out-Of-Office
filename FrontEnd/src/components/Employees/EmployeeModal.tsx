@@ -1,6 +1,8 @@
 import React from 'react';
 import { IEmployee } from "../../models/IEmployee";
 
+import '../../styles/modalStyles.scss'
+
 interface EmployeeModalProps {
     employee: IEmployee | null;
     onClose: () => void;

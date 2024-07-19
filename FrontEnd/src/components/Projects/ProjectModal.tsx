@@ -2,6 +2,8 @@ import React from 'react';
 import { IProject } from "../../models/IProject";
 import {IEmployee} from "../../models/IEmployee";
 
+import '../../styles/modalStyles.scss'
+
 interface ProjectModalProps {
     project: IProject | null;
     onClose: () => void;

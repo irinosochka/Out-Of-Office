@@ -23,7 +23,6 @@ const ApprovalRequestsPage: React.FC = () => {
 
     return (
         <div>
-            <h2>Approval Requests Table</h2>
             <ApprovalRequestsTable approvalRequests={approvalRequests} />
         </div>
     );

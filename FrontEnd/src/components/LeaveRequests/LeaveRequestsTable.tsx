@@ -9,7 +9,7 @@ import Search from "../../common/Search";
 interface LeaveRequestsTableProps {
     leaveRequests: ILeaveRequest[];
     isEmp: boolean;
-    setIsModalOpen: (open: boolean) => void;
+    setShowAddingForm: (open: boolean) => void;
     setSelectedRequest: (request: ILeaveRequest) => void;
     handleEditRequest: (request: ILeaveRequest) => void;
     handleStatusChange: (request: ILeaveRequest, updatedStatus: 'Submitted' | 'Canceled') => void;
@@ -20,7 +20,7 @@ interface LeaveRequestsTableProps {
 const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                                                                    leaveRequests,
                                                                    isEmp,
-                                                                   setIsModalOpen,
+                                                                   setShowAddingForm,
                                                                    setSelectedRequest,
                                                                    handleDeleteRequest,
                                                                    handleEditRequest,
@@ -43,7 +43,7 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                 </div>
                 {
                     isEmp &&
-                    <button className="btn-add" onClick={() => setIsModalOpen(true)}>
+                    <button className="btn-add" onClick={() => setShowAddingForm(true)}>
                         <span>+</span> Add
                     </button>
                 }
