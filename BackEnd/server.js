@@ -280,14 +280,48 @@ app.get('/Lists/ApprovalRequests', (req, res) => {
     });
 });
 
+app.get('/Lists/ApprovalRequests/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('SELECT * FROM ApprovalRequests WHERE ID = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results[0]);
+        }
+    });
+});
+
+app.post('/Lists/ApprovalRequests', (req, res) => {
+    const leaveRequest = req.body;
+    db.query('INSERT INTO ApprovalRequests SET ?', leaveRequest, (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(201).send({ id: results.insertId, ...leaveRequest });
+        }
+    });
+});
+
+app.put('/Lists/ApprovalRequests/:id', (req, res) => {
+    const { id } = req.params;
+    const request = req.body;
+    db.query('UPDATE ApprovalRequests SET ? WHERE ID = ?', [request, id], (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send({ id, ...request });
+        }
+    });
+});
+
 app.delete('/Lists/ApprovalRequests/:id', (req, res) => {
     const { id } = req.params;
     db.query('DELETE FROM ApprovalRequests WHERE ID = ?', [id], (err, results) => {
         if (err) {
-            console.error('Failed to delete approval request:', err);
-            return res.status(500).send(err.message);
+            res.status(500).send(err);
+        } else {
+            res.send({ message: 'ApprovalRequest deleted', id });
         }
-        res.send({ message: 'Approval request deleted', id });
     });
 });
 

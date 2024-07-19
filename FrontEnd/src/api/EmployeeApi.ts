@@ -23,3 +23,7 @@ export const updateEmployee = async (employee: IEmployee) => {
     return axios.put(`${API_URL}/${employee.ID}`, employee);
 };
 
+export const getEmployeeById = async (employeeId: number) => {
+    return axios.get<IEmployee>(`${API_URL}/${employeeId}`);
+};
+

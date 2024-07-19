@@ -7,6 +7,9 @@ import {useRole} from "../context/RoleContext";
 import moment from "moment";
 import {deleteLeaveRequest, getLeaveRequests, updateLeaveRequest} from "../api/LeaveRequestApi";
 import UpdateLeaveRequestForm from "../components/LeaveRequests/UpdateLeaveRequestForm";
+import {IApprovalRequest} from "../models/IApprovalRequest";
+import {addApprovalRequest} from "../api/ApprovalRequestApi";
+import {getEmployeeById} from "../api/EmployeeApi";
 
 const LeaveRequestsPage: React.FC = () => {
     const [leaveRequests, setLeaveRequests] = useState<ILeaveRequest[]>([]);
@@ -87,7 +90,32 @@ const LeaveRequestsPage: React.FC = () => {
     const handleStatusChange = async (request: ILeaveRequest, updatedStatus : 'Submitted' | 'Canceled') => {
         const updatedProject: ILeaveRequest = { ...request, Status: updatedStatus };
         await handleUpdateLeaveRequest(updatedProject);
+        if(updatedStatus === 'Submitted')
+            await createApprovalRequest(request);
     };
+
+    const createApprovalRequest = async (request: ILeaveRequest) => {
+        try {
+            const response = await getEmployeeById(request.EmployeeID);
+            const employee = response.data;
+            const HRManagerID = employee.PeoplePartner;
+
+            try {
+                const approvalRequest : Omit<IApprovalRequest, 'ID'> = {
+                    Approver: HRManagerID,
+                    LeaveRequestID: request.ID,
+                    Status: 'New'
+                }
+                await addApprovalRequest(approvalRequest);
+                console.log('Approval Request created successfully')
+            } catch (error) {
+                console.error('Error adding data:', error);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
 
     return (
         <>

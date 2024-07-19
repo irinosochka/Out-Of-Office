@@ -8,8 +8,8 @@ export const getLeaveRequests = async () => {
     return axios.get<ILeaveRequest[]>(`${API_URL}`);
 }
 
-export const addLeaveRequest = async (project: { StartDate: string; Status: "New" | "Submitted" | "Canceled" | "Approved" | "Rejected"; Comment?: string; AbsenceReason: string; EmployeeID: number; EndDate: string }) => {
-    return axios.post<ILeaveRequest>(`${API_URL}`, project);
+export const addLeaveRequest = async (leaveRequest: { StartDate: string; Status: "New" | "Submitted" | "Canceled" | "Approved" | "Rejected"; Comment?: string; AbsenceReason: string; EmployeeID: number; EndDate: string }) => {
+    return axios.post<ILeaveRequest>(`${API_URL}`, leaveRequest);
 }
 
 export const deleteLeaveRequest = async (leaveRequestId: number) => {
