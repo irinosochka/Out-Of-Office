@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import '../styles/pageStyles.scss'
+
 interface RoleSelectionProps {
     onRoleSelect: (role: string) => void;
 }
@@ -14,9 +16,9 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({ onRoleSelect }) => {
     };
 
     return (
-        <div>
-            <label htmlFor="role">Choose your role: </label>
-            <select id="role" value={selectedRole} onChange={handleChange}>
+        <div className="role-selection">
+            <label htmlFor="role">Choose your role:</label>
+            <select id="role" value={selectedRole} onChange={handleChange} className="role-select">
                 <option value="">Select a role</option>
                 <option value="Employee">Employee</option>
                 <option value="HR Manager">HR Manager</option>

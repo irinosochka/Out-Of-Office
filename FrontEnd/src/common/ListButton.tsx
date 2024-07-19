@@ -1,5 +1,7 @@
 import React from 'react';
 
+import '../styles/pageStyles.scss'
+
 interface ListButtonProps {
     selectedButton: string;
     setSelectedButton: (button: string) => void;
@@ -7,28 +9,28 @@ interface ListButtonProps {
 
 const ListButton: React.FC<ListButtonProps> = ({ selectedButton, setSelectedButton }) => {
     return (
-        <div>
+        <div className="button-list">
             <button
                 onClick={() => setSelectedButton('Employees')}
-                className={selectedButton === 'Employees' ? 'active' : ''}
+                className={`list-button ${selectedButton === 'Employees' ? 'active' : ''}`}
             >
                 Employees
             </button>
             <button
                 onClick={() => setSelectedButton('ApprovalRequests')}
-                className={selectedButton === 'ApprovalRequests' ? 'active' : ''}
+                className={`list-button ${selectedButton === 'ApprovalRequests' ? 'active' : ''}`}
             >
                 Approval Requests
             </button>
             <button
                 onClick={() => setSelectedButton('LeaveRequest')}
-                className={selectedButton === 'LeaveRequest' ? 'active' : ''}
+                className={`list-button ${selectedButton === 'LeaveRequest' ? 'active' : ''}`}
             >
                 Leave Request
             </button>
             <button
                 onClick={() => setSelectedButton('Project')}
-                className={selectedButton === 'Project' ? 'active' : ''}
+                className={`list-button ${selectedButton === 'Project' ? 'active' : ''}`}
             >
                 Project
             </button>

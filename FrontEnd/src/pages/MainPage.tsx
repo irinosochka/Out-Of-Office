@@ -7,7 +7,7 @@ import ListButton from "../common/ListButton";
 import RoleSelection from "../common/RoleSelection";
 import { useRole } from "../context/RoleContext";
 
-import '../styles/pageStyles.scss'
+import '../styles/pageStyles.scss';
 
 const MainPage: React.FC = () => {
     const { selectedRole, setSelectedRole } = useRole();
@@ -20,9 +20,9 @@ const MainPage: React.FC = () => {
     useEffect(() => {
         if (selectedRole === 'Employee') {
             setSelectedButton('LeaveRequest');
-        } else if(selectedRole === ''){
+        } else if (selectedRole === '') {
             setSelectedButton('');
-        } else if(selectedRole === 'Project Manager') {
+        } else if (selectedRole === 'Project Manager') {
             setSelectedButton('Project');
         } else {
             setSelectedButton('Employees');
@@ -31,17 +31,19 @@ const MainPage: React.FC = () => {
 
     return (
         <div className="page-container">
-            <div>
+            <div className="role-selection-container">
                 <RoleSelection onRoleSelect={handleRoleSelect} />
             </div>
             {selectedRole && selectedRole !== 'Employee' && (
-                <ListButton
-                    selectedButton={selectedButton}
-                    setSelectedButton={setSelectedButton}
-                />
+                <div className="button-list-container">
+                    <ListButton
+                        selectedButton={selectedButton}
+                        setSelectedButton={setSelectedButton}
+                    />
+                </div>
             )}
-            <div>
-                {selectedRole === '' && <p>Please choose a role to continue.</p>}
+            <div className="content-container">
+                {selectedRole === '' && <p className="no-role-message">Please choose a role to continue.</p>}
                 {selectedButton === 'Employees' && selectedRole !== 'Employee' && <EmployeesPage />}
                 {selectedButton === 'ApprovalRequests' && selectedRole !== 'Employee' && <ApprovalRequestsPage />}
                 {selectedButton === 'LeaveRequest' && selectedRole !== '' && <LeaveRequestsPage />}

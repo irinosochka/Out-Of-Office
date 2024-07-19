@@ -73,7 +73,7 @@ const LeaveRequestsPage: React.FC = () => {
             const response = await updateLeaveRequest(formattedRequest);
             if (response.status === 200) {
                 setLeaveRequests((prevRequests) =>
-                    prevRequests.map((req) => (req.ID === updatedRequest.ID ? updatedRequest : req))
+                    prevRequests.map((req) => (req.ID === updatedRequest.ID ? response.data : req))
                 );
             } else {
                 console.error("Failed to update leave request, status:", response.status);
@@ -83,7 +83,6 @@ const LeaveRequestsPage: React.FC = () => {
         }
         setEditingLeaveRequest(null);
     };
-
 
     const handleStatusChange = async (request: ILeaveRequest, updatedStatus : 'Submitted' | 'Canceled') => {
         const updatedProject: ILeaveRequest = { ...request, Status: updatedStatus };
@@ -116,7 +115,7 @@ const LeaveRequestsPage: React.FC = () => {
             {editingLeaveRequest && (
                 <UpdateLeaveRequestForm
                     leaveRequest={editingLeaveRequest}
-                    onSubmit={handleEditLeaveRequest}
+                    onSubmit={handleUpdateLeaveRequest}
                     onClose={() => setEditingLeaveRequest(null)}
                 />
             )}

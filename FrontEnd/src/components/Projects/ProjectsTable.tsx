@@ -40,12 +40,11 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                 <div className="table-search">
                     <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by id..." />
                 </div>
-                {
-                    isPm &&
+                {isPm && (
                     <button className="btn-add" onClick={() => setShowAddingForm(true)}>
                         <span>+</span> Add
                     </button>
-                }
+                )}
             </div>
 
             <div className="table-container">
@@ -53,10 +52,10 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                     <thead>
                     <tr>
                         <SortableHeader column="ID" title="ID" handleSort={handleSort} />
-                        <SortableHeader column="ProjectType" title="ProjectType" handleSort={handleSort} />
-                        <SortableHeader column="StartDate" title="StartDate" handleSort={handleSort} />
-                        <SortableHeader column="EndDate" title="EndDate" handleSort={handleSort} />
-                        <SortableHeader column="ProjectManager" title="ProjectManager" handleSort={handleSort} />
+                        <SortableHeader column="ProjectType" title="Project Type" handleSort={handleSort} />
+                        <SortableHeader column="StartDate" title="Start Date" handleSort={handleSort} />
+                        <SortableHeader column="EndDate" title="End Date" handleSort={handleSort} />
+                        <SortableHeader column="ProjectManager" title="Project Manager" handleSort={handleSort} />
                         <SortableHeader column="Status" title="Status" handleSort={handleSort} />
                         <SortableHeader column="Comment" title="Comment" handleSort={handleSort} />
                         {isPm && <th>Actions</th>}
@@ -76,15 +75,37 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                             <td>{project.ProjectManager}</td>
                             <td>{project.Status}</td>
                             <td>{project.Comment}</td>
-                            {isPm &&
+                            {isPm && (
                                 <td>
-                                    <button onClick={(e) => { e.stopPropagation(); handleEditProject(project); }}>Edit</button>
-                                    <button onClick={(e) => { e.stopPropagation(); handleStatusChange(project); }}>
+                                    <button
+                                        className="btn-edit"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEditProject(project);
+                                        }}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        className={`btn-action ${project.Status === 'Active' ? 'btn-deactivate' : 'btn-activate'}`}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleStatusChange(project);
+                                        }}
+                                    >
                                         {project.Status === 'Active' ? 'Deactivate' : 'Activate'}
                                     </button>
-                                    <button onClick={(e) => { e.stopPropagation(); handleDeleteProject(project); }}>Delete</button>
+                                    <button
+                                        className="btn-delete"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteProject(project);
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
                                 </td>
-                            }
+                            )}
                         </tr>
                     ))}
                     </tbody>
@@ -93,6 +114,7 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
         </>
     );
 };
+
 
 interface SortableHeaderProps {
     column: keyof IProject;

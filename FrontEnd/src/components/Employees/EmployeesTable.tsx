@@ -41,12 +41,11 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
                 <div className="table-search">
                     <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by full name..." />
                 </div>
-                {
-                    isHR &&
+                {isHR && (
                     <button className="btn-add" onClick={() => setShowAddingForm(true)}>
                         <span>+</span> Add
                     </button>
-                }
+                )}
             </div>
 
             <div className="table-container">
@@ -82,6 +81,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
                             {isHR && (
                                 <td>
                                     <button
+                                        className="btn-edit"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             handleEditEmployee(employee);
@@ -90,6 +90,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
                                         Edit
                                     </button>
                                     <button
+                                        className={`btn-action ${employee.Status === 'Active' ? 'btn-deactivate' : 'btn-activate'}`}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             handleStatusChange(employee);
@@ -98,6 +99,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
                                         {employee.Status === 'Active' ? 'Deactivate' : 'Activate'}
                                     </button>
                                     <button
+                                        className="btn-delete"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             handleDeleteEmployee(employee);
@@ -114,6 +116,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
             </div>
         </>
     );
+
 };
 
 interface SortableHeaderProps {

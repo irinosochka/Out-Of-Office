@@ -41,12 +41,11 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                 <div className="table-search">
                     <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by id..." />
                 </div>
-                {
-                    isEmp &&
+                {isEmp && (
                     <button className="btn-add" onClick={() => setShowAddingForm(true)}>
                         <span>+</span> Add
                     </button>
-                }
+                )}
             </div>
 
             <div className="table-container">
@@ -77,22 +76,72 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                             <td>{new Date(leaveRequest.EndDate).toLocaleDateString()}</td>
                             <td>{leaveRequest.Status}</td>
                             <td>{leaveRequest.Comment}</td>
-                            {isEmp &&
+                            {isEmp && (
                                 <td>
-                                    <button onClick={(e) => { e.stopPropagation(); handleEditRequest(leaveRequest); }}>Edit</button>
                                     {leaveRequest.Status === 'New' && (
                                         <>
-                                            <button onClick={(e) => { e.stopPropagation(); handleStatusChange(leaveRequest, 'Submitted')}}>Submit</button>
-                                            <button onClick={(e) => { e.stopPropagation(); handleStatusChange(leaveRequest, 'Canceled')}}>Cancel</button>
+                                            <button
+                                                className="btn-edit"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEditRequest(leaveRequest);
+                                                }}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                className="btn-action"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleStatusChange(leaveRequest, 'Submitted');
+                                                }}
+                                            >
+                                                Submit
+                                            </button>
+                                            <button
+                                                className="btn-action"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleStatusChange(leaveRequest, 'Canceled');
+                                                }}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                className="btn-delete"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteRequest(leaveRequest);
+                                                }}
+                                            >
+                                                Delete
+                                            </button>
                                         </>
                                     )}
                                     {leaveRequest.Status === 'Submitted' && (
-                                        <button onClick={(e) => { e.stopPropagation(); handleStatusChange(leaveRequest, 'Canceled')}}>Cancel</button>
+                                        <button
+                                            className="btn-action"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleStatusChange(leaveRequest, 'Canceled');
+                                            }}
+                                        >
+                                            Cancel
+                                        </button>
                                     )}
-                                    <button onClick={(e) => { e.stopPropagation(); handleDeleteRequest(leaveRequest); }}>Delete</button>
+                                    {(leaveRequest.Status !== 'Submitted' && leaveRequest.Status !== 'Approved' && leaveRequest.Status !== 'Rejected') && (
+                                        <button
+                                            className="btn-delete"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteRequest(leaveRequest);
+                                            }}
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
                                 </td>
-
-                            }
+                            )}
                         </tr>
                     ))}
                     </tbody>

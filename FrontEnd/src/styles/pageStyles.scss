@@ -1,5 +1,83 @@
+@import 'variables';
 
 .page-container {
-  margin-top: 10px;
-  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.role-selection-container {
+  margin-bottom: 20px;
+}
+
+.content-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.no-role-message {
+  font-size: 18px;
+  color: #666;
+}
+
+.role-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  label {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .role-select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s;
+
+    &:hover {
+      border-color: $black;
+    }
+  }
+}
+
+.button-list {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  .list-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid $black;
+    border-radius: 4px;
+    background-color: #fff;
+    color: $black;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+
+    &.active {
+      background-color: $black;
+      color: #fff;
+      border-color: $black;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    &:hover {
+      background-color: lighten($black, 10%);
+      color: $black;
+      transform: scale(1.0);
+    }
+  }
 }
