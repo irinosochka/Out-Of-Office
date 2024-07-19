@@ -131,6 +131,7 @@ const EmployeesPage: React.FC = () => {
                 <EmployeeModal
                     employee={selectedEmployee}
                     onClose={() =>  setSelectedEmployee(null)}
+                    peoplePartners={peoplePartners}
                 />
             )}
             {editingEmployee && (

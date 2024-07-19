@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { IProject } from "../../models/IProject";
+import { IEmployee } from "../../models/IEmployee";
 import Search from "../../common/Search";
 import '../../styles/tableStyles.scss';
-import {sortArray} from "../../utils/utils";
-import {useSort} from "../../hooks/useSort";
+import { sortArray } from "../../utils/utils";
+import { useSort } from "../../hooks/useSort";
 
 interface ProjectsTableProps {
     projects: IProject[];
@@ -13,7 +14,7 @@ interface ProjectsTableProps {
     handleEditProject: (project: IProject) => void;
     handleStatusChange: (project: IProject) => void;
     handleDeleteProject: (project: IProject) => void;
-
+    projectManagers: IEmployee[]; // New prop to pass project managers
 }
 
 const ProjectsTable: React.FC<ProjectsTableProps> = ({
@@ -23,7 +24,8 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                                                          setSelectedProject,
                                                          handleEditProject,
                                                          handleDeleteProject,
-                                                         handleStatusChange
+                                                         handleStatusChange,
+                                                         projectManagers // New prop
                                                      }) => {
     const { sortBy, sortAsc, handleSort } = useSort<IProject>('ID');
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -62,59 +64,64 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                     </tr>
                     </thead>
                     <tbody>
-                    {sorted.map((project, idx) => (
-                        <tr
-                            key={idx}
-                            onClick={() => setSelectedProject(project)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <td>{project.ID}</td>
-                            <td>{project.ProjectType}</td>
-                            <td>{new Date(project.StartDate).toLocaleDateString()}</td>
-                            <td>{project.EndDate ? new Date(project.EndDate).toLocaleDateString() : undefined}</td>
-                            <td>{project.ProjectManager}</td>
-                            <td>{project.Status}</td>
-                            <td>{project.Comment}</td>
-                            {isPm && (
-                                <td>
-                                    <button
-                                        className="btn-edit"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleEditProject(project);
-                                        }}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className={`btn-action ${project.Status === 'Active' ? 'btn-deactivate' : 'btn-activate'}`}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleStatusChange(project);
-                                        }}
-                                    >
-                                        {project.Status === 'Active' ? 'Deactivate' : 'Activate'}
-                                    </button>
-                                    <button
-                                        className="btn-delete"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteProject(project);
-                                        }}
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            )}
-                        </tr>
-                    ))}
+                    {sorted.map((project, idx) => {
+                        // Find project manager by ID
+                        const manager = projectManagers.find(pm => pm.ID === project.ProjectManager);
+                        const projectManagerName = manager ? `${manager.ID} - ${manager.FullName}` : 'Unknown';
+
+                        return (
+                            <tr
+                                key={idx}
+                                onClick={() => setSelectedProject(project)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <td>{project.ID}</td>
+                                <td>{project.ProjectType}</td>
+                                <td>{new Date(project.StartDate).toLocaleDateString()}</td>
+                                <td>{project.EndDate ? new Date(project.EndDate).toLocaleDateString() : undefined}</td>
+                                <td>{projectManagerName}</td>
+                                <td>{project.Status}</td>
+                                <td>{project.Comment}</td>
+                                {isPm && (
+                                    <td>
+                                        <button
+                                            className="btn-edit"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEditProject(project);
+                                            }}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className={`btn-action ${project.Status === 'Active' ? 'btn-deactivate' : 'btn-activate'}`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleStatusChange(project);
+                                            }}
+                                        >
+                                            {project.Status === 'Active' ? 'Deactivate' : 'Activate'}
+                                        </button>
+                                        <button
+                                            className="btn-delete"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteProject(project);
+                                            }}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                )}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         </>
     );
 };
-
 
 interface SortableHeaderProps {
     column: keyof IProject;

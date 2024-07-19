@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import ProjectsTable from '../components/Projects/ProjectsTable';
-import {IProject} from "../models/IProject";
-import {IEmployee} from "../models/IEmployee";
-import {deleteProject, getProjects, updateProject} from "../api/ProjectApi";
-import {getEmployees} from "../api/EmployeeApi";
-import {useRole} from "../context/RoleContext";
+import { IProject } from "../models/IProject";
+import { IEmployee } from "../models/IEmployee";
+import { deleteProject, getProjects, updateProject } from "../api/ProjectApi";
+import { getEmployees } from "../api/EmployeeApi";
+import { useRole } from "../context/RoleContext";
 import moment from "moment";
 import AddProjectForm from "../components/Projects/AddProjectForm";
 import ProjectModal from "../components/Projects/ProjectModal";
@@ -16,7 +16,7 @@ const ProjectsPage: React.FC = () => {
     const [showAddingForm, setShowAddingForm] = useState<boolean>(false);
     const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
     const [editingProject, setEditingProject] = useState<IProject | null>(null);
-    const {selectedRole} = useRole();
+    const { selectedRole } = useRole();
 
     const isPM = () => selectedRole === 'Project Manager';
 
@@ -61,7 +61,6 @@ const ProjectsPage: React.FC = () => {
             console.error('Error fetching updated projects list:', error);
         }
     };
-
 
     const handleCloseAdding = () => {
         setShowAddingForm(false);
@@ -124,6 +123,7 @@ const ProjectsPage: React.FC = () => {
                 handleEditProject={handleEditProject}
                 handleStatusChange={handleStatusChange}
                 handleDeleteProject={handleDeleteProject}
+                projectManagers={projectManagers} // Pass project managers here
             />
             {showAddingForm && (
                 <AddProjectForm
@@ -131,13 +131,13 @@ const ProjectsPage: React.FC = () => {
                     onClose={() => handleCloseAdding()}
                 />
             )}
-            {selectedProject &&
+            {selectedProject && (
                 <ProjectModal
                     project={selectedProject}
                     onClose={() => setSelectedProject(null)}
-                    projectManagers={projectManagers}
+                    projectManagers={projectManagers} // Pass project managers here
                 />
-            }
+            )}
             {editingProject && (
                 <UpdateProjectForm
                     project={editingProject}
@@ -146,7 +146,6 @@ const ProjectsPage: React.FC = () => {
                 />
             )}
         </>
-
     );
 };
 

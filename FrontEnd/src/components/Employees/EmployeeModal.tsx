@@ -1,14 +1,15 @@
 import React from 'react';
 import { IEmployee } from "../../models/IEmployee";
 
-import '../../styles/modalStyles.scss'
+import '../../styles/modalStyles.scss';
 
 interface EmployeeModalProps {
     employee: IEmployee | null;
+    peoplePartners: { [key: number]: string };
     onClose: () => void;
 }
 
-const EmployeeModal: React.FC<EmployeeModalProps> = ({ employee, onClose }) => {
+const EmployeeModal: React.FC<EmployeeModalProps> = ({ employee, peoplePartners, onClose }) => {
     if (!employee) return null;
 
     return (
@@ -22,7 +23,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ employee, onClose }) => {
                 <p><strong>Subdivision:</strong> {employee.Subdivision}</p>
                 <p><strong>Position:</strong> {employee.Position}</p>
                 <p><strong>Status:</strong> {employee.Status}</p>
-                <p><strong>People Partner:</strong> {employee.PeoplePartner}</p>
+                <p><strong>People Partner:</strong> {peoplePartners[employee.PeoplePartner] || employee.PeoplePartner}</p>
                 <p><strong>Out Of Office Balance:</strong> {employee.OutOfOfficeBalance}</p>
             </div>
         </div>

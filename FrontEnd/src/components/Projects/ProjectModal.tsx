@@ -1,7 +1,6 @@
 import React from 'react';
 import { IProject } from "../../models/IProject";
-import {IEmployee} from "../../models/IEmployee";
-
+import { IEmployee } from "../../models/IEmployee";
 import '../../styles/modalStyles.scss'
 
 interface ProjectModalProps {
@@ -14,7 +13,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, projectMa
     if (!project) return null;
 
     const projectManager = projectManagers.find(pm => pm.ID === project.ProjectManager);
-
+    const projectManagerName = projectManager ? `${projectManager.ID} - ${projectManager.FullName}` : 'Unknown';
 
     return (
         <div className="modal">
@@ -22,10 +21,10 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, projectMa
                 <span className="close" onClick={onClose}>&times;</span>
                 <h2>Project Details</h2>
                 <p><strong>ID:</strong> {project.ID}</p>
-                <p><strong>ProjectType:</strong> {project.ProjectType}</p>
+                <p><strong>Project Type:</strong> {project.ProjectType}</p>
                 <p><strong>Start Date:</strong> {new Date(project.StartDate).toLocaleDateString()}</p>
-                <p><strong>End Date:</strong> {project.EndDate ? new Date(project.EndDate).toLocaleDateString() : undefined}</p>
-                <p><strong>Project Manager:</strong> {projectManager ? `${projectManager.FullName} (ID: ${projectManager.ID})` : 'Unknown'}</p>
+                <p><strong>End Date:</strong> {project.EndDate ? new Date(project.EndDate).toLocaleDateString() : 'N/A'}</p>
+                <p><strong>Project Manager:</strong> {projectManagerName}</p>
                 <p><strong>Status:</strong> {project.Status}</p>
                 <p><strong>Comment:</strong> {project.Comment}</p>
             </div>

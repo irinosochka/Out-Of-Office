@@ -7,6 +7,7 @@ import Search from "../../common/Search";
 
 interface LeaveRequestsTableProps {
     leaveRequests: ILeaveRequest[];
+    employeeMap: { [key: number]: string }; // Map to get employee full names
     isEmp: boolean;
     setShowAddingForm: (open: boolean) => void;
     setSelectedRequest: (request: ILeaveRequest) => void;
@@ -17,6 +18,7 @@ interface LeaveRequestsTableProps {
 
 const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                                                                    leaveRequests,
+                                                                   employeeMap,
                                                                    isEmp,
                                                                    setShowAddingForm,
                                                                    setSelectedRequest,
@@ -51,7 +53,7 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                     <thead>
                     <tr>
                         <SortableHeader column="ID" title="ID" handleSort={handleSort} />
-                        <SortableHeader column="EmployeeID" title="Employee ID" handleSort={handleSort} />
+                        <SortableHeader column="EmployeeID" title="Employee" handleSort={handleSort} />
                         <SortableHeader column="AbsenceReason" title="Absence Reason" handleSort={handleSort} />
                         <SortableHeader column="StartDate" title="Start Date" handleSort={handleSort} />
                         <SortableHeader column="EndDate" title="End Date" handleSort={handleSort} />
@@ -68,7 +70,7 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                             style={{ cursor: 'pointer' }}
                         >
                             <td>{leaveRequest.ID}</td>
-                            <td>{leaveRequest.EmployeeID}</td>
+                            <td>{employeeMap[leaveRequest.EmployeeID] || leaveRequest.EmployeeID}</td>
                             <td>{leaveRequest.AbsenceReason}</td>
                             <td>{new Date(leaveRequest.StartDate).toLocaleDateString()}</td>
                             <td>{new Date(leaveRequest.EndDate).toLocaleDateString()}</td>
