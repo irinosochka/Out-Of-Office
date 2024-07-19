@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IEmployee } from '../models/IEmployee';
 import EmployeesTable from '../components/Employees/EmployeesTable';
-import { checkEmployeeReferences, deleteEmployee, getEmployees, updateEmployee } from '../api/EmployeeApi';
+import { checkEmployeeReferences, deleteEmployee, getEmployees, updateEmployee, getEmployeeById } from '../api/EmployeeApi';
 import { useRole } from '../context/RoleContext';
 import AddEmployeeForm from '../components/Employees/AddEmployeeForm';
 import EmployeeModal from '../components/Employees/EmployeeModal';
@@ -9,6 +9,7 @@ import UpdateEmployeeForm from '../components/Employees/UpdateEmployeeForm';
 
 const EmployeesPage: React.FC = () => {
     const [employees, setEmployees] = useState<IEmployee[]>([]);
+    const [peoplePartners, setPeoplePartners] = useState<{ [key: number]: string }>({});
     const [showAddingForm, setShowAddingForm] = useState<boolean>(false);
     const [selectedEmployee, setSelectedEmployee] = useState<IEmployee | null>(null);
     const [editingEmployee, setEditingEmployee] = useState<IEmployee | null>(null);
@@ -21,6 +22,8 @@ const EmployeesPage: React.FC = () => {
             try {
                 const response = await getEmployees();
                 setEmployees(response.data);
+                const peoplePartnersData = await getPeoplePartners(response.data);
+                setPeoplePartners(peoplePartnersData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -29,16 +32,29 @@ const EmployeesPage: React.FC = () => {
         fetchEmployees();
     }, []);
 
+    const getPeoplePartners = async (employees: IEmployee[]) => {
+        const peoplePartnersData: { [key: number]: string } = {};
+        await Promise.all(
+            employees.map(async (employee) => {
+                if (employee.PeoplePartner) {
+                    const response = await getEmployeeById(employee.PeoplePartner);
+                    peoplePartnersData[employee.PeoplePartner] = `${employee.PeoplePartner} - ${response.data.FullName}`;
+                }
+            })
+        );
+        return peoplePartnersData;
+    };
 
     const handleAddEmployee = async () => {
         try {
             const response = await getEmployees();
             setEmployees(response.data);
+            const peoplePartnersData = await getPeoplePartners(response.data);
+            setPeoplePartners(peoplePartnersData);
         } catch (error) {
             console.error('Error fetching updated employee list:', error);
         }
     };
-
 
     const handleCloseAdding = () => {
         setShowAddingForm(false);
@@ -97,6 +113,7 @@ const EmployeesPage: React.FC = () => {
         <>
             <EmployeesTable
                 employees={employees}
+                peoplePartners={peoplePartners}
                 isHR={isHR()}
                 setShowAddingForm={setShowAddingForm}
                 setSelectedEmployee={setSelectedEmployee}

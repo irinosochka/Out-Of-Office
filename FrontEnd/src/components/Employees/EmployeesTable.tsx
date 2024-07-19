@@ -7,6 +7,7 @@ import { useSort } from '../../hooks/useSort';
 
 interface EmployeeTableProps {
     employees: IEmployee[];
+    peoplePartners: { [key: number]: string };
     isHR: boolean;
     setShowAddingForm: (open: boolean) => void;
     setSelectedEmployee: (employee: IEmployee) => void;
@@ -17,6 +18,7 @@ interface EmployeeTableProps {
 
 const EmployeesTable: React.FC<EmployeeTableProps> = ({
                                                           employees,
+                                                          peoplePartners,
                                                           isHR,
                                                           setShowAddingForm,
                                                           setSelectedEmployee,
@@ -76,7 +78,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
                             <td>{employee.Subdivision}</td>
                             <td>{employee.Position}</td>
                             <td>{employee.Status}</td>
-                            <td>{employee.PeoplePartner}</td>
+                            <td>{peoplePartners[employee.PeoplePartner] || employee.PeoplePartner}</td>
                             <td>{employee.OutOfOfficeBalance}</td>
                             {isHR && (
                                 <td>
