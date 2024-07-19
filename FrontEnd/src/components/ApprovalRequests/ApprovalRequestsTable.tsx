@@ -8,11 +8,13 @@ import Search from "../../common/Search";
 
 interface ApprovalRequestsTableProps {
     approvalRequests: IApprovalRequest[];
+    setSelectedRequest: (request: IApprovalRequest) => void;
     handleStatusChange: (request: IApprovalRequest, updatedStatus: 'Approved' | 'Rejected') => void;
 }
 
 const ApprovalRequestsTable: React.FC<ApprovalRequestsTableProps> = ({
                                                                          approvalRequests,
+                                                                         setSelectedRequest,
                                                                          handleStatusChange,
                                                                      }) => {
     const { sortBy, sortAsc, handleSort } = useSort<IApprovalRequest>('ID');
@@ -45,7 +47,11 @@ const ApprovalRequestsTable: React.FC<ApprovalRequestsTableProps> = ({
                     </thead>
                     <tbody>
                     {sorted.map((approvalRequest, idx) => (
-                        <tr key={idx}>
+                        <tr
+                            key={idx}
+                            onClick={() => setSelectedRequest(approvalRequest)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             <td>{approvalRequest.ID}</td>
                             <td>{approvalRequest.Approver}</td>
                             <td>{approvalRequest.LeaveRequestID}</td>

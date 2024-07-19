@@ -53,7 +53,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
                     <thead>
                     <tr>
                         <SortableHeader column="ID" title="ID" handleSort={handleSort} />
-                        <SortableHeader column="Photo" title="Photo" handleSort={handleSort} />
+                        {/*<SortableHeader column="Photo" title="Photo" handleSort={handleSort} />*/}
                         <SortableHeader column="FullName" title="Full Name" handleSort={handleSort} />
                         <SortableHeader column="Subdivision" title="Subdivision" handleSort={handleSort} />
                         <SortableHeader column="Position" title="Position" handleSort={handleSort} />
@@ -71,7 +71,7 @@ const EmployeesTable: React.FC<EmployeeTableProps> = ({
                             style={{ cursor: 'pointer' }}
                         >
                             <td>{employee.ID}</td>
-                            <td>{employee.Photo}</td>
+                            {/*<td>{employee.Photo}</td>*/}
                             <td>{employee.FullName}</td>
                             <td>{employee.Subdivision}</td>
                             <td>{employee.Position}</td>

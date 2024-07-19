@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { ILeaveRequest } from '../../models/ILeaveRequest';
-
 import '../../styles/tableStyles.scss';
-import {sortArray} from "../../utils/utils";
-import {useSort} from "../../hooks/useSort";
+import { sortArray } from "../../utils/utils";
+import { useSort } from "../../hooks/useSort";
 import Search from "../../common/Search";
 
 interface LeaveRequestsTableProps {
@@ -14,7 +13,6 @@ interface LeaveRequestsTableProps {
     handleEditRequest: (request: ILeaveRequest) => void;
     handleStatusChange: (request: ILeaveRequest, updatedStatus: 'Submitted' | 'Canceled') => void;
     handleDeleteRequest: (request: ILeaveRequest) => void;
-
 }
 
 const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
@@ -107,6 +105,15 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                                             >
                                                 Cancel
                                             </button>
+                                            <button
+                                                className="btn-delete"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteRequest(leaveRequest);
+                                                }}
+                                            >
+                                                Delete
+                                            </button>
                                         </>
                                     )}
                                     {leaveRequest.Status === 'Submitted' && (
@@ -118,17 +125,6 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                                             }}
                                         >
                                             Cancel
-                                        </button>
-                                    )}
-                                    {(leaveRequest.Status !== 'Submitted' && leaveRequest.Status !== 'Approved' && leaveRequest.Status !== 'Rejected') && (
-                                        <button
-                                            className="btn-delete"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDeleteRequest(leaveRequest);
-                                            }}
-                                        >
-                                            Delete
                                         </button>
                                     )}
                                 </td>

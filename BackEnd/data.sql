@@ -29,7 +29,7 @@ CREATE TABLE ApprovalRequests (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     Approver INT,
     LeaveRequestID INT,
-    Status ENUM('New', 'Approved', 'Rejected') NOT NULL,
+    Status ENUM('New', 'Approved', 'Rejected', 'Canceled') NOT NULL,
     Comment TEXT,
     FOREIGN KEY (Approver) REFERENCES Employees(ID),
     FOREIGN KEY (LeaveRequestID) REFERENCES LeaveRequests(ID)

@@ -6,9 +6,11 @@ import AddCommentModal from "../components/ApprovalRequests/AddCommentModal";
 import { getLeaveRequestById, updateLeaveRequest } from "../api/LeaveRequestApi";
 import moment from "moment";
 import { getEmployeeById, updateEmployee } from "../api/EmployeeApi";
+import ApprovalRequestModal from "../components/ApprovalRequests/ApprovalRequestModal";
 
 const ApprovalRequestsPage: React.FC = () => {
     const [approvalRequests, setApprovalRequests] = useState<IApprovalRequest[]>([]);
+    const [selectedApprovalRequest, setSelectedApprovalRequest] = useState<IApprovalRequest | null>(null);
     const [showAddingCommentForm, setShowAddingCommentForm] = useState<boolean>(false);
     const [requestForAddComment, setRequestForAddComment] = useState<IApprovalRequest | null>(null);
 
@@ -110,11 +112,18 @@ const ApprovalRequestsPage: React.FC = () => {
             <ApprovalRequestsTable
                 approvalRequests={approvalRequests}
                 handleStatusChange={handleStatusChange}
+                setSelectedRequest={setSelectedApprovalRequest}
             />
             {showAddingCommentForm && requestForAddComment && (
                 <AddCommentModal
                     onClose={() => setShowAddingCommentForm(false)}
                     onSubmit={handleAddCommentSubmit}
+                />
+            )}
+            {selectedApprovalRequest && (
+                <ApprovalRequestModal
+                    onClose={() => setSelectedApprovalRequest(null)}
+                    approvalRequest={selectedApprovalRequest}
                 />
             )}
         </>
