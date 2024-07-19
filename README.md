@@ -52,8 +52,9 @@
 
 ## Database Setup
 
-- The database will be created automatically upon starting the backend server.
-- The database name will be 'out_of_office'.
+- The database is created automatically when the backend server is started. 
+- The Test Employee is automatically inserted into database after creation
+- The database name is 'out_of_office'.
 - If the database already exists, the program will not create a new one.
 
 ## Using the Application

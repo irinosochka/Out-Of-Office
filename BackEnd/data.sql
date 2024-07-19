@@ -8,7 +8,7 @@ CREATE TABLE Employees (
     Subdivision VARCHAR(255) NOT NULL,
     Position VARCHAR(255) NOT NULL,
     Status ENUM('Active', 'Inactive') NOT NULL,
-    PeoplePartner INT,
+    PeoplePartner INT NOT NULL,
     OutOfOfficeBalance INT NOT NULL,
     Photo BLOB,
     FOREIGN KEY (PeoplePartner) REFERENCES Employees(ID)
@@ -45,3 +45,8 @@ CREATE TABLE Projects (
     Status ENUM('Active', 'Inactive') NOT NULL,
     FOREIGN KEY (ProjectManager) REFERENCES Employees(ID)
 );
+
+-- Insert Initial Employee Data
+INSERT INTO Employees (FullName, Subdivision, Position, Status, PeoplePartner, OutOfOfficeBalance)
+VALUES
+('Test Employee', 'HR', 'HR Manager', 'Active', 1, 24);
