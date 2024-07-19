@@ -53,9 +53,15 @@ const ProjectsPage: React.FC = () => {
         fetchPMs();
     }, []);
 
-    const handleAddProject = (project: IProject) => {
-        setProjects([...projects, project]);
+    const handleAddProject = async () => {
+        try {
+            const response = await getProjects();
+            setProjects(response.data);
+        } catch (error) {
+            console.error('Error fetching updated projects list:', error);
+        }
     };
+
 
     const handleCloseAdding = () => {
         setShowAddingForm(false);

@@ -4,7 +4,7 @@ import { subdivisions, positionsBySubdivision } from "../../constants/Lists";
 import { addEmployee, getEmployees } from "../../api/EmployeeApi";
 
 interface AddEmployeeFormProps {
-    onSubmit: (employee: IEmployee) => void;
+    onSubmit: () => void;
     onClose: () => void;
 }
 
@@ -60,11 +60,11 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onClose }) 
             alert('Out-Of-Office Balance cannot be less than 0');
         } else {
             try {
-                const response = await addEmployee({
+                await addEmployee({
                     ...formState,
                     PeoplePartner: formState.PeoplePartner
                 });
-                onSubmit(response.data);
+                onSubmit();
             } catch (error) {
                 console.error('Error adding data:', error);
             }

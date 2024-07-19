@@ -7,7 +7,7 @@ import { getEmployees } from "../../api/EmployeeApi";
 import { addProject } from "../../api/ProjectApi";
 
 interface AddProjectFormProps {
-    onSubmit: (project: IProject) => void;
+    onSubmit: () => void;
     onClose: () => void;
 }
 
@@ -70,8 +70,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onSubmit, onClose }) =>
                 EndDate: formState.EndDate ? moment(formState.EndDate).format('YYYY-MM-DD') : null,
             };
 
-            const response = await addProject(formattedFormState);
-            onSubmit(response.data);
+            await addProject(formattedFormState);
+            onSubmit();
         } catch (error) {
             console.error('Error adding data:', error);
         }

@@ -6,7 +6,7 @@ import { getEmployees } from "../../api/EmployeeApi";
 import { addLeaveRequest } from "../../api/LeaveRequestApi";
 
 interface AddLeaveRequestFormProps {
-    onSubmit: (leaveRequest: ILeaveRequest) => void;
+    onSubmit: () => void;
     onClose: () => void;
 }
 
@@ -69,8 +69,8 @@ const AddLeaveRequestForm: React.FC<AddLeaveRequestFormProps> = ({ onSubmit, onC
                 StartDate: moment(formState.StartDate).format('YYYY-MM-DD'),
                 EndDate: moment(formState.EndDate).format('YYYY-MM-DD')
             };
-            const response = await addLeaveRequest(formattedFormState);
-            onSubmit(response.data);
+            await addLeaveRequest(formattedFormState);
+            onSubmit();
         } catch (error) {
             console.error('Error adding data:', error);
         }

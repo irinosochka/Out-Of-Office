@@ -107,15 +107,6 @@ const LeaveRequestsTable: React.FC<LeaveRequestsTableProps> = ({
                                             >
                                                 Cancel
                                             </button>
-                                            <button
-                                                className="btn-delete"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDeleteRequest(leaveRequest);
-                                                }}
-                                            >
-                                                Delete
-                                            </button>
                                         </>
                                     )}
                                     {leaveRequest.Status === 'Submitted' && (

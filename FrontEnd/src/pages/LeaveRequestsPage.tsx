@@ -38,8 +38,13 @@ const LeaveRequestsPage: React.FC = () => {
         setShowAddingForm(false);
     };
 
-    const handleAddLeaveRequest = (request: ILeaveRequest) => {
-        setLeaveRequests([...leaveRequests, request]);
+    const handleAddLeaveRequest = async () => {
+        try {
+            const response = await getLeaveRequests();
+            setLeaveRequests(response.data);
+        } catch (error) {
+            console.error('Error fetching updated leave requests list:', error);
+        }
     };
 
     const handleDeleteLeaveRequest = async (deletedRequest: ILeaveRequest) => {

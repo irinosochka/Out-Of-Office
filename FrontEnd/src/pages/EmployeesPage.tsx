@@ -29,9 +29,16 @@ const EmployeesPage: React.FC = () => {
         fetchEmployees();
     }, []);
 
-    const handleAddEmployee = (employee: IEmployee) => {
-        setEmployees([...employees, employee]);
+
+    const handleAddEmployee = async () => {
+        try {
+            const response = await getEmployees();
+            setEmployees(response.data);
+        } catch (error) {
+            console.error('Error fetching updated employee list:', error);
+        }
     };
+
 
     const handleCloseAdding = () => {
         setShowAddingForm(false);
