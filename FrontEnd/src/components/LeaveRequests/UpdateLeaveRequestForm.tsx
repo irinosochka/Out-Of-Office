@@ -76,8 +76,9 @@ const UpdateLeaveRequestForm: React.FC<UpdateLeaveRequestFormProps> = ({ leaveRe
         <div className="modal">
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
-                <form onSubmit={handleSubmit}>
-                    <div>
+                <h2>Update Leave Request</h2>
+                <form className="modal-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
                         <label>Employee</label>
                         <select
                             name="EmployeeID"
@@ -93,7 +94,7 @@ const UpdateLeaveRequestForm: React.FC<UpdateLeaveRequestFormProps> = ({ leaveRe
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Absence Reason</label>
                         <input
                             name="AbsenceReason"
@@ -102,7 +103,7 @@ const UpdateLeaveRequestForm: React.FC<UpdateLeaveRequestFormProps> = ({ leaveRe
                             required
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Start Date</label>
                         <input
                             type="date"
@@ -112,7 +113,7 @@ const UpdateLeaveRequestForm: React.FC<UpdateLeaveRequestFormProps> = ({ leaveRe
                             required
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>End Date</label>
                         <input
                             type="date"
@@ -121,7 +122,7 @@ const UpdateLeaveRequestForm: React.FC<UpdateLeaveRequestFormProps> = ({ leaveRe
                             onChange={handleChange}
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Comment</label>
                         <input
                             name="Comment"
@@ -129,7 +130,7 @@ const UpdateLeaveRequestForm: React.FC<UpdateLeaveRequestFormProps> = ({ leaveRe
                             onChange={handleChange}
                         />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Status</label>
                         <select
                             name="Status"

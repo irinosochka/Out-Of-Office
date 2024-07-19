@@ -76,10 +76,16 @@ const UpdateProjectForm: React.FC<UpdateProjectFormProps> = ({ project, onSubmit
         <div className="modal">
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
-                <form onSubmit={handleSubmit}>
-                    <div>
+                <h2>Update Project</h2>
+                <form className="modal-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
                         <label>Project Type</label>
-                        <select name="ProjectType" value={formState.ProjectType} onChange={handleChange} required>
+                        <select
+                            name="ProjectType"
+                            value={formState.ProjectType}
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">Select Project Type</option>
                             {projectTypes.map(projectType => (
                                 <option key={projectType} value={projectType}>
@@ -88,21 +94,33 @@ const UpdateProjectForm: React.FC<UpdateProjectFormProps> = ({ project, onSubmit
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Start Date</label>
-                        <input type="date" name="StartDate"
-                               value={moment(formState.StartDate).format('YYYY-MM-DD')}
-                               onChange={handleChange} required />
+                        <input
+                            type="date"
+                            name="StartDate"
+                            value={moment(formState.StartDate).format('YYYY-MM-DD')}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>End Date</label>
-                        <input type="date" name="EndDate"
-                               value={formState.EndDate ? moment(formState.EndDate).format('YYYY-MM-DD') : ''}
-                               onChange={handleChange} />
+                        <input
+                            type="date"
+                            name="EndDate"
+                            value={formState.EndDate ? moment(formState.EndDate).format('YYYY-MM-DD') : ''}
+                            onChange={handleChange}
+                        />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Project Manager</label>
-                        <select name="ProjectManager" value={formState.ProjectManager.toString()} onChange={handleChange} required>
+                        <select
+                            name="ProjectManager"
+                            value={formState.ProjectManager.toString()}
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">Select Project Manager</option>
                             {pM.map(pm => (
                                 <option key={pm.ID} value={pm.ID.toString()}>
@@ -111,13 +129,22 @@ const UpdateProjectForm: React.FC<UpdateProjectFormProps> = ({ project, onSubmit
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Comment</label>
-                        <input name="Comment" value={formState.Comment} onChange={handleChange} />
+                        <input
+                            name="Comment"
+                            value={formState.Comment}
+                            onChange={handleChange}
+                        />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <label>Status</label>
-                        <select name="Status" value={formState.Status} onChange={handleChange} required>
+                        <select
+                            name="Status"
+                            value={formState.Status}
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>

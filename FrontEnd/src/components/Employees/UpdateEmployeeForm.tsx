@@ -35,40 +35,82 @@ const UpdateEmployeeForm: React.FC<UpdateEmployeeFormProps> = ({ employee, onSub
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Full Name</label>
-                <input name="FullName" value={formState.FullName} onChange={handleChange} required />
+        <div className="modal">
+            <div className="modal-content">
+                <span className="close" onClick={onClose}>&times;</span>
+                <h2>Update Employee</h2>
+                <form className="modal-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Full Name</label>
+                        <input
+                            name="FullName"
+                            value={formState.FullName}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Subdivision</label>
+                        <input
+                            name="Subdivision"
+                            value={formState.Subdivision}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Position</label>
+                        <input
+                            name="Position"
+                            value={formState.Position}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Status</label>
+                        <select
+                            name="Status"
+                            value={formState.Status}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>People Partner</label>
+                        <input
+                            type="number"
+                            name="PeoplePartner"
+                            value={formState.PeoplePartner}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Out Of Office Balance</label>
+                        <input
+                            type="number"
+                            name="OutOfOfficeBalance"
+                            value={formState.OutOfOfficeBalance}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Photo</label>
+                        <input
+                            type="file"
+                            name="Photo"
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <button type="submit">Update Employee</button>
+                </form>
             </div>
-            <div>
-                <label>Subdivision</label>
-                <input name="Subdivision" value={formState.Subdivision} onChange={handleChange} required />
-            </div>
-            <div>
-                <label>Position</label>
-                <input name="Position" value={formState.Position} onChange={handleChange} required />
-            </div>
-            <div>
-                <label>Status</label>
-                <select name="Status" value={formState.Status} onChange={handleChange} required>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                </select>
-            </div>
-            <div>
-                <label>People Partner</label>
-                <input type="number" name="PeoplePartner" value={formState.PeoplePartner} onChange={handleChange} required />
-            </div>
-            <div>
-                <label>Out Of Office Balance</label>
-                <input type="number" name="OutOfOfficeBalance" value={formState.OutOfOfficeBalance} onChange={handleChange} required />
-            </div>
-            <div>
-                <label>Photo</label>
-                <input type="file" name="Photo" value={formState.Photo} onChange={handleChange} />
-            </div>
-            <button type="submit">Update Employee</button>
-        </form>
+        </div>
     );
 };
 
