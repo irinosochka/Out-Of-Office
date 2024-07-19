@@ -5,7 +5,7 @@ import '../../styles/modalStyles.scss';
 interface LeaveRequestModalProps {
     onClose: () => void;
     leaveRequest: ILeaveRequest;
-    employeeMap: { [key: number]: string }; // Map to get employee full names
+    employeeMap: { [key: number]: string };
 }
 
 const LeaveRequestModal: React.FC<LeaveRequestModalProps> = ({ onClose, leaveRequest, employeeMap }) => {

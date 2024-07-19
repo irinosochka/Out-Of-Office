@@ -14,7 +14,7 @@ interface ProjectsTableProps {
     handleEditProject: (project: IProject) => void;
     handleStatusChange: (project: IProject) => void;
     handleDeleteProject: (project: IProject) => void;
-    projectManagers: IEmployee[]; // New prop to pass project managers
+    projectManagers: IEmployee[];
 }
 
 const ProjectsTable: React.FC<ProjectsTableProps> = ({
@@ -25,7 +25,7 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                                                          handleEditProject,
                                                          handleDeleteProject,
                                                          handleStatusChange,
-                                                         projectManagers // New prop
+                                                         projectManagers
                                                      }) => {
     const { sortBy, sortAsc, handleSort } = useSort<IProject>('ID');
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -65,7 +65,6 @@ const ProjectsTable: React.FC<ProjectsTableProps> = ({
                     </thead>
                     <tbody>
                     {sorted.map((project, idx) => {
-                        // Find project manager by ID
                         const manager = projectManagers.find(pm => pm.ID === project.ProjectManager);
                         const projectManagerName = manager ? `${manager.ID} - ${manager.FullName}` : 'Unknown';
 

@@ -7,7 +7,7 @@ import Search from "../../common/Search";
 
 interface LeaveRequestsTableProps {
     leaveRequests: ILeaveRequest[];
-    employeeMap: { [key: number]: string }; // Map to get employee full names
+    employeeMap: { [key: number]: string };
     isEmp: boolean;
     setShowAddingForm: (open: boolean) => void;
     setSelectedRequest: (request: ILeaveRequest) => void;

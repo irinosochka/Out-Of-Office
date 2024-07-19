@@ -123,7 +123,7 @@ const ProjectsPage: React.FC = () => {
                 handleEditProject={handleEditProject}
                 handleStatusChange={handleStatusChange}
                 handleDeleteProject={handleDeleteProject}
-                projectManagers={projectManagers} // Pass project managers here
+                projectManagers={projectManagers}
             />
             {showAddingForm && (
                 <AddProjectForm
@@ -135,7 +135,7 @@ const ProjectsPage: React.FC = () => {
                 <ProjectModal
                     project={selectedProject}
                     onClose={() => setSelectedProject(null)}
-                    projectManagers={projectManagers} // Pass project managers here
+                    projectManagers={projectManagers}
                 />
             )}
             {editingProject && (

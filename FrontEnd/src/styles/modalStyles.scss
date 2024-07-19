@@ -14,18 +14,16 @@
   overflow: auto;
 }
 
-// Modal content styles
 .modal-content {
   background-color: #fff;
   border-radius: 8px;
   padding: 20px;
   max-width: 90%;
-  width: 500px; // Adjust width as needed
+  width: 500px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
-// Close button styles
 .close {
   position: absolute;
   top: 10px;
@@ -40,7 +38,6 @@
   }
 }
 
-// Heading styles
 h2 {
   margin-top: 0;
   font-size: 24px;
@@ -48,7 +45,6 @@ h2 {
   font-weight: bold;
 }
 
-// Form styles
 .modal-form {
   display: flex;
   flex-direction: column;
@@ -68,12 +64,11 @@ h2 {
       border: 1px solid #ddd;
       border-radius: 4px;
       font-size: 16px;
-      box-sizing: border-box; // Ensure padding and border are included in width calculation
+      box-sizing: border-box;
     }
 
     input[type="date"] {
-      /* Adjust for date inputs if needed */
-      font-size: 16px; // Ensure font size is consistent
+      font-size: 16px;
     }
   }
 
@@ -93,7 +88,6 @@ h2 {
   }
 }
 
-// Responsive design adjustments
 @media (max-width: 600px) {
   .modal-content {
     width: 90%;

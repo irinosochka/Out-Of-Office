@@ -34,7 +34,7 @@ const LeaveRequestsPage: React.FC = () => {
 
         const fetchEmployees = async () => {
             try {
-                const response = await getEmployees(); // Fetch all employees
+                const response = await getEmployees();
                 const employees = response.data;
                 const map: { [key: number]: string } = {};
                 employees.forEach(emp => map[emp.ID] = `${emp.ID} - ${emp.FullName}`);
