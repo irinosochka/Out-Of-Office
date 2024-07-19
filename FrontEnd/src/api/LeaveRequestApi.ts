@@ -8,7 +8,7 @@ export const getLeaveRequests = async () => {
     return axios.get<ILeaveRequest[]>(`${API_URL}`);
 }
 
-export const addLeaveRequest = async (leaveRequest: { StartDate: string; Status: "New" | "Submitted" | "Canceled" | "Approved" | "Rejected"; Comment?: string; AbsenceReason: string; EmployeeID: number; EndDate: string }) => {
+export const addLeaveRequest = async (leaveRequest: { StartDate: string; Status: 'New' | 'Submitted' | 'Canceled' | 'Approved' | 'Rejected'; Comment?: string; AbsenceReason: string; EmployeeID: number; EndDate: string }) => {
     return axios.post<ILeaveRequest>(`${API_URL}`, leaveRequest);
 }
 
@@ -16,7 +16,7 @@ export const deleteLeaveRequest = async (leaveRequestId: number) => {
     return axios.delete(`${API_URL}/${leaveRequestId}`);
 };
 
-export const updateLeaveRequest = async (leaveRequest: { StartDate: string; Status: "New" | "Submitted" | "Canceled" | "Approved" | "Rejected"; Comment?: string; AbsenceReason: string; ID: number; EmployeeID: number; EndDate: string }) => {
+export const updateLeaveRequest = async (leaveRequest: { StartDate: string; Status: 'New' | 'Submitted' | 'Canceled' | 'Approved' | 'Rejected'; Comment?: string; AbsenceReason: string; ID: number; EmployeeID: number; EndDate: string }) => {
     return axios.put(`${API_URL}/${leaveRequest.ID}`, leaveRequest);
 };
 

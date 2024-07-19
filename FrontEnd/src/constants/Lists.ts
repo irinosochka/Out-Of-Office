@@ -10,3 +10,6 @@ export const positionsBySubdivision: { [key: string]: string[] } = {
 
 export const projectTypes = ['Standard building projects', 'Non-standard building projects', 'Standard civil engineering projects',
                             'Non-standard civil engineering projects', 'Development and equipment projects', 'Outsourcing projects' ]
+
+export const absenceReasons = ['Emergency Leave', 'Sick Leave', 'Vacation', 'Medical Leave', 'Appointment', 'Public Service',
+                                'Study Leave']

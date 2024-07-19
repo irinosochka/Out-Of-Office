@@ -4,6 +4,7 @@ import { ILeaveRequest } from "../../models/ILeaveRequest";
 import { IEmployee } from "../../models/IEmployee";
 import { getEmployees } from "../../api/EmployeeApi";
 import { addLeaveRequest } from "../../api/LeaveRequestApi";
+import {absenceReasons} from "../../constants/Lists";
 
 interface AddLeaveRequestFormProps {
     onSubmit: () => void;
@@ -51,6 +52,14 @@ const AddLeaveRequestForm: React.FC<AddLeaveRequestFormProps> = ({ onSubmit, onC
                 [name]: value
             });
         }
+    };
+
+    const handleAbsenceReasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { value } = e.target;
+        setFormState({
+            ...formState,
+            AbsenceReason: value
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -101,12 +110,19 @@ const AddLeaveRequestForm: React.FC<AddLeaveRequestFormProps> = ({ onSubmit, onC
                     </div>
                     <div className="form-group">
                         <label>Absence Reason</label>
-                        <input
+                        <select
                             name="AbsenceReason"
                             value={formState.AbsenceReason}
-                            onChange={handleChange}
+                            onChange={handleAbsenceReasonChange}
                             required
-                        />
+                        >
+                            <option value="">Select Absence Reason</option>
+                            {absenceReasons.map(absenceReason => (
+                                <option key={absenceReason} value={absenceReason}>
+                                    {absenceReason}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label>Start Date</label>
