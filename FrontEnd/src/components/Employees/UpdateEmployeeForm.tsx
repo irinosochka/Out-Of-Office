@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IEmployee } from '../../models/IEmployee';
-import {updateEmployee} from "../../api/EmployeeApi";
+import {getEmployees, updateEmployee} from "../../api/EmployeeApi";
+import {positionsBySubdivision, subdivisions} from "../../constants/Lists";
 
 interface UpdateEmployeeFormProps {
     employee: IEmployee;
@@ -10,6 +11,24 @@ interface UpdateEmployeeFormProps {
 
 const UpdateEmployeeForm: React.FC<UpdateEmployeeFormProps> = ({ employee, onSubmit, onClose }) => {
     const [formState, setFormState] = useState<IEmployee>(employee);
+    const [hrManagers, setHrManagers] = useState<IEmployee[]>([]);
+
+    useEffect(() => {
+        const fetchHRManagers = async () => {
+            try {
+                const response = await getEmployees();
+                const filteredManagers = response.data.filter(employee =>
+                    employee.Subdivision === 'HR' && employee.Position === 'HR Manager' &&
+                    employee.Status === 'Active'
+                );
+                setHrManagers(filteredManagers);
+            } catch (error) {
+                console.error('Error fetching HR managers:', error);
+            }
+        };
+
+        fetchHRManagers();
+    }, []);
 
     useEffect(() => {
         setFormState(employee);
@@ -20,6 +39,15 @@ const UpdateEmployeeForm: React.FC<UpdateEmployeeFormProps> = ({ employee, onSub
         setFormState({
             ...formState,
             [name]: value,
+        });
+    };
+
+    const handleSubdivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { value } = e.target;
+        setFormState({
+            ...formState,
+            Subdivision: value,
+            Position: '',
         });
     };
 
@@ -51,21 +79,35 @@ const UpdateEmployeeForm: React.FC<UpdateEmployeeFormProps> = ({ employee, onSub
                     </div>
                     <div className="form-group">
                         <label>Subdivision</label>
-                        <input
+                        <select
                             name="Subdivision"
                             value={formState.Subdivision}
-                            onChange={handleChange}
+                            onChange={handleSubdivisionChange}
                             required
-                        />
+                        >
+                            <option value="">Select Subdivision</option>
+                            {subdivisions.map(subdivision => (
+                                <option key={subdivision} value={subdivision}>
+                                    {subdivision}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label>Position</label>
-                        <input
+                        <select
                             name="Position"
                             value={formState.Position}
                             onChange={handleChange}
                             required
-                        />
+                        >
+                            <option value="">Select Position</option>
+                            {formState.Subdivision && positionsBySubdivision[formState.Subdivision].map(position => (
+                                <option key={position} value={position}>
+                                    {position}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label>Status</label>
@@ -81,13 +123,19 @@ const UpdateEmployeeForm: React.FC<UpdateEmployeeFormProps> = ({ employee, onSub
                     </div>
                     <div className="form-group">
                         <label>People Partner</label>
-                        <input
-                            type="number"
+                        <select
                             name="PeoplePartner"
-                            value={formState.PeoplePartner}
+                            value={formState.PeoplePartner.toString()}
                             onChange={handleChange}
                             required
-                        />
+                        >
+                            <option value="">Select People Partner</option>
+                            {hrManagers.map(manager => (
+                                <option key={manager.ID} value={manager.ID.toString()}>
+                                    {manager.ID} - {manager.FullName}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label>Out Of Office Balance</label>
@@ -97,14 +145,6 @@ const UpdateEmployeeForm: React.FC<UpdateEmployeeFormProps> = ({ employee, onSub
                             value={formState.OutOfOfficeBalance}
                             onChange={handleChange}
                             required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Photo</label>
-                        <input
-                            type="file"
-                            name="Photo"
-                            onChange={handleChange}
                         />
                     </div>
                     <button type="submit">Update Employee</button>

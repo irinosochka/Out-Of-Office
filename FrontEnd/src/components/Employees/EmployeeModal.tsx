@@ -18,7 +18,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ employee, peoplePartners,
                 <span className="close" onClick={onClose}>&times;</span>
                 <h2>Employee Details</h2>
                 <p><strong>ID:</strong> {employee.ID}</p>
-                <p><strong>Photo:</strong> {employee.Photo}</p>
+                {/*<p><strong>Photo:</strong> {employee.Photo}</p>*/}
                 <p><strong>Full Name:</strong> {employee.FullName}</p>
                 <p><strong>Subdivision:</strong> {employee.Subdivision}</p>
                 <p><strong>Position:</strong> {employee.Position}</p>
